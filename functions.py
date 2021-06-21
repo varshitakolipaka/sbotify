@@ -1,27 +1,15 @@
 
-import json
-
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-
-scope = 'playlist-modify-public'
-username = '6tuo5kv4t1yadwyhogmk05jon' 
-
-token = SpotifyOAuth(scope=scope, username=username)
-print("HELLOOOO0")
-spotifyObject = spotipy.Spotify(auth_manager = token)
-print("HELLOOOO1")
+from spotipy.oauth2 import SpotifyClientCredentials
+sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id='962d2f3b1b7f4a78b0fca6cd996e1a62',client_secret='184a975003e04bf9bf29f99e1c1b4525'))
+# spotifyObject = spotipy.Spotify(auth_manager = token)
 playlist_name = input("Add a playlist name ")
-print("HELLOOOO2")
 playlist_description = input("Say something about the playlist ")
-print("HELLOOOO3")
-scope = SpotifyOAuth(scope=scope, username=username)
-print("HELLOOOO4")
-#spotify = spotipy.Spotipy(auth_manager=token)
+# scope = SpotifyClientCredentials()
+# #spotify = spotipy.Spotipy(auth_manager=token)
+print(sp.current_user_playlists())
 
-
-spotifyObject.user_playlist_create(user=username, name=playlist_name, public=True, description=playlist_description)
-print("HELLOOOO5")
+# sp.user_playlist_create(user='6tuo5kv4t1yadwyhogmk05jon', name=playlist_name, public=True, description=playlist_description)
 # user_input = ''
 # user_input = input('Enter songs\' name: ')
 # list_of_songs = []
