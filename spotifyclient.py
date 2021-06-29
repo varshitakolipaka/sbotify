@@ -26,10 +26,10 @@ class SpotifyClient:
         url = f"https://api.spotify.com/v1/search?q=wow&type=track&limit=1&offset=1"
         response = self._place_get_api_request(url)
         response_json = response.json()
-        #tracks = [Track(trac["track"]["name"], trac["track"]["id"], trac["track"]["artists"][0]["name"]) for
-                  #trac in response_json["items"]]
+        # tracks = [Track(trac["track"]["name"], trac["track"]["id"], trac["track"]["artists"][0]["name"]) for
+        # trac in response_json["items"]]
         tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
-                track in response_json[tracks.items[0]]]
+                  track in response_json["tracks"]["items"]]
         return tracks
 
     def get_track_recommendations(self, seed_tracks, limit=50):
