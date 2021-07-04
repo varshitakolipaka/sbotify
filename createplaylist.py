@@ -30,14 +30,14 @@ def main():
         print(f"{index+1}- {track}")
 
     # get playlist name from user and create playlist
-    playlist_name = input("\nWhat's the playlist name? ")
-    playlist = spotify_client.create_playlist(playlist_name)
-    print(f"\nPlaylist '{playlist.name}' was created successfully.")
+    playlist_name = input("\nPlaylist link: ")
+    # playlist = spotify_client.create_playlist(playlist_name)
+    # print(f"\nPlaylist '{playlist.name}' was created successfully.")
 
     # populate playlist with recommended tracks
-    spotify_client.populate_playlist(playlist, recommended_tracks)
+    spotify_client.populate_playlist(playlist_name, recommended_tracks)
     print(
-        f"\nRecommended tracks successfully uploaded to playlist '{playlist.name}'.")
+        f"\nRecommended tracks successfully uploaded to playlist.")
 
 
 if __name__ == "__main__":
