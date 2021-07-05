@@ -1,11 +1,12 @@
 # import the discord library
 import discord
 from discord import message
+from createplaylist import main
 import array
 # bot connect
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
-out_channel = 12345
+out_channel = 854832431764602901
 
 # list of commands
 commands = ["add", "remove"]
@@ -39,8 +40,10 @@ async def on_message(message):
         mssg = input_mssg.split(" ", 1)
         command = mssg[0][1:len(mssg[0])]
         if is_command(command):
-            await output_channel.send(command)
-            await output_channel.send(mssg[1])
+            query = mssg[1]
+            main(query,"https://open.spotify.com/playlist/123gKtvvoFi0iNMjvTHsC3")
+            # await output_channel.send(command)
+            # await output_channel.send(mssg[1])
         else:
             myEmbed = discord.Embed(
                 title="Error", description="This is not a recognized command.\n Try <prefix>help to see all commands")
@@ -49,4 +52,4 @@ async def on_message(message):
 
 
 # Run the client on this server
-client.run('bot token')
+client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.uN414vAZSXjIkRKA-L08ynOF4aI')

@@ -4,7 +4,7 @@ import re
 from spotifyclient import SpotifyClient
 
 
-def main():
+def main(query,playlist_name):
     spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
                                    os.getenv("SPOTIFY_USER_ID"))
 
@@ -22,7 +22,7 @@ def main():
     # seed_tracks = [last_played_tracks[int(index)-1] for index in indexes]
 
     # get recommended tracks based off seed tracks
-    query = (input("Search query: "))
+    # query = (input("Search query: "))
     # print(f"\nHere are the last {num_tracks_to_visualise} tracks you listened to on Spotify:")
     query = query.replace(" ","%20")
     recommended_tracks = spotify_client.get_track_recommendations(query)
@@ -31,7 +31,7 @@ def main():
         print(f"{index+1}- {track}")
 
     # get playlist name from user and create playlist
-    playlist_name = input("\nPlaylist link: ")
+    # playlist_name = input("\nPlaylist link: ")
     playlist_name = playlist_name.rsplit('/', 1)[-1]
     playlist_name = playlist_name[ 0 : 22 ]
     print(playlist_name)
