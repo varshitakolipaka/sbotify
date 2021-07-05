@@ -17,34 +17,9 @@ class SpotifyClient:
         self._authorization_token = authorization_token
         self._user_id = user_id
 
-    def get_last_played_tracks(self, limit=10):
-        """Get the last n tracks played by a user
-
-        :param limit (int): Number of tracks to get. Should be <= 50
-        :return tracks (list of Track): List of last played tracks
-        """
-        url = f"https://api.spotify.com/v1/search?q=uptown%20funk&type=track&limit=1&offset=1"
-        response = self._place_get_api_request(url)
-        response_json = response.json()
-        # tracks = [Track(trac["track"]["name"], trac["track"]["id"], trac["track"]["artists"][0]["name"]) for
-        # trac in response_json["items"]]
-        tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
-                  track in response_json["tracks"]["items"]]
-        return tracks
 
     def get_track_recommendations(self,query):
-        # """Get a list of recommended tracks starting from a number of seed tracks.
-
-        # :param seed_tracks (list of Track): Reference tracks to get recommendations. Should be 5 or less.
-        # :param limit (int): Number of recommended tracks to be returned
-        # :return tracks (list of Track): List of recommended tracks
-        # """
-        # seed_tracks_url = ""
-        # for seed_track in seed_tracks:
-        #     seed_tracks_url += seed_track.id + ","
-        # seed_tracks_url = seed_tracks_url[:-1]
-        # url = f"https://api.spotify.com/v1/recommendations?seed_tracks={seed_tracks_url}&limit={limit}"
-        url = f"https://api.spotify.com/v1/search?q={query}&type=track&limit=1&offset=1"
+        url = f"https://api.spotify.com/v1/search?q={query}&type=track&limit=1&offset=0"
         response = self._place_get_api_request(url)
         response_json = response.json()
         # tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
