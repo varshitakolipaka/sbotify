@@ -1,4 +1,5 @@
 import os
+import re
 
 from spotifyclient import SpotifyClient
 
@@ -23,7 +24,7 @@ def main():
     # get recommended tracks based off seed tracks
     query = (input("Search query: "))
     # print(f"\nHere are the last {num_tracks_to_visualise} tracks you listened to on Spotify:")
-
+    query = query.replace(" ","%20")
     recommended_tracks = spotify_client.get_track_recommendations(query)
     print("\nHere are the recommended tracks which will be included in your new playlist:")
     for index, track in enumerate(recommended_tracks):
@@ -31,13 +32,16 @@ def main():
 
     # get playlist name from user and create playlist
     playlist_name = input("\nPlaylist link: ")
+    playlist_name = playlist_name.rsplit('/', 1)[-1]
+    playlist_name = playlist_name[ 0 : 22 ]
+    print(playlist_name)
     # playlist = spotify_client.create_playlist(playlist_name)
     # print(f"\nPlaylist '{playlist.name}' was created successfully.")
 
     # populate playlist with recommended tracks
     spotify_client.populate_playlist(playlist_name, recommended_tracks)
     print(
-        f"\nRecommended tracks successfully uploaded to playlist.")
+        f"\nSong added to the playlist.")
 
 
 if __name__ == "__main__":
