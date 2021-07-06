@@ -1,9 +1,16 @@
+import os
+import re
+
+from spotifyclient import SpotifyClient
+from playlist import Playlist
 # import the discord library
 import discord
 from discord import message
 from discord import embeds
 from createplaylist import main
 from commands_parser import *
+spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
+                               os.getenv("SPOTIFY_USER_ID"))
 # bot connect
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
@@ -32,12 +39,29 @@ async def on_message(message):
     if input_mssg[0] == '!':
         mssg = input_mssg.split(" ", 1)
         command = mssg[0][1:len(mssg[0])]
+        if (str(message.author.id) not in members) and not(is_command_join(command)):
+            myEmbed = discord.Embed(
+                title="Error", description="Uh Oh :(( , you are not yet part of the clan\n Use {prefix} join to be a part of noise_bot family!")
+            await output_channel.send(embed=myEmbed)
+            return
         if is_command_add(command):
             query = mssg[1]
+            for i in playlists:
+                if(i[0] == str(message.author.id)):
+                    # print(i[0])
+                    if (len(i) != 1):
+                        # print("yess")
+                        var = str(i[1].id)
+                        addingurl = "https://open.spotify.com/playlist/" + var
+                        main(query, addingurl)
+                        print(addingurl)
+                        break
+            for i in playlists:
+                print(i)
             # main(query,"https://open.spotify.com/playlist/123gKtvvoFi0iNMjvTHsC3")
             # await output_channel.send(command)
             # await output_channel.send(mssg[1])
-            await output_channel.send(message.author.id)
+            # await output_channel.send(message.author.id)
         elif is_command_join(command):
             new_member = [str(message.author.id)]
             if str(message.author.id) in members:
@@ -69,7 +93,7 @@ async def on_message(message):
                             for j in i:
                                 if(type(j) == str):
                                     continue
-                                if(j[0] == mssg[1]):
+                                if(type(j) == Playlist and j.name == mssg[1]):
                                     pos = i.index(j)
                                     swap(i, 1, pos)
                                     flag2 = 1
@@ -82,8 +106,9 @@ async def on_message(message):
                 await output_channel.send(embed=myEmbed)
             elif(flag2 == 0):
                 await output_channel.send("Playlist doesn't exist.\nDo you want to create one by the name {mssg[1]}\n Reply with (y/n) to this message")
-
-                playlists[playlists.index(i)].append([mssg[1], 'NULL'])
+                new_playlist = spotify_client.create_playlist(mssg[1])
+                print(new_playlist)
+                playlists[playlists.index(i)].append(new_playlist)
                 myEmbed = discord.Embed(
                     title="Playlist created", description="Name : {mssg[1]}")
                 await output_channel.send(embed=myEmbed)
