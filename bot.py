@@ -71,7 +71,7 @@ async def on_message(message):
             elif(flag2 == 0):
                 # make_playlist(mssg[1])
                 myEmbed = discord.Embed(
-                        title="Playlist created", description="Name :", mssg[1])
+                    title="Playlist created", description="Name : {mssg[1]}")
                 await output_channel.send(embed=myEmbed)
             for i in playlists:
                 print(i)
