@@ -23,7 +23,7 @@ async def on_ready():
     # output_channel object holds the info of that channel, whos id is provided
     output_channel = client.get_channel(out_channel)
     # code to send message is
-    await output_channel.send("Hemlos guys, I am noise bot")
+    await output_channel.send("I art been summoneth.")
 
 
 @client.event
@@ -71,7 +71,7 @@ async def on_message(message):
             elif(flag2 == 0):
                 # make_playlist(mssg[1])
                 myEmbed = discord.Embed(
-                    title="Playlist created", description="Name : {mssg[1]}")
+                        title="Playlist created", description="Name :", mssg[1])
                 await output_channel.send(embed=myEmbed)
             for i in playlists:
                 print(i)
