@@ -9,6 +9,10 @@ from discord import message
 from discord import embeds
 from createplaylist import main
 from commands_parser import *
+from dotenv import load_dotenv
+
+load_dotenv()
+
 spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
                                os.getenv("SPOTIFY_USER_ID"))
 # bot connect
