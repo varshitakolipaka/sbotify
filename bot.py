@@ -71,7 +71,7 @@ async def on_message(message):
             if str(message.author.id) in members:
                 myEmbed = discord.Embed(
                     title="You are already a part of the clan", description="Try {prefix} help to see all commands")
-                await output_channel.send(embed=myEmbed)
+                await output_channel.send(embed=myEmbed)t
             else:
                 playlists.append(new_member)
                 members.append(str(message.author.id))
