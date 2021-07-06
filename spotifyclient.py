@@ -17,8 +17,7 @@ class SpotifyClient:
         self._authorization_token = authorization_token
         self._user_id = user_id
 
-
-    def get_track_recommendations(self,query):
+    def get_track_recommendations(self, query):
         url = f"https://api.spotify.com/v1/search?q={query}&type=track&limit=1&offset=0"
         response = self._place_get_api_request(url)
         response_json = response.json()
@@ -47,6 +46,28 @@ class SpotifyClient:
         playlist = Playlist(name, playlist_id)
         return playlist
 
+    def delete_song_by_position(self, number, playlist_id):
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        print(url)
+        response = self._place_get_api_request(url)
+        response_json = response.json()
+        # tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
+        #           track in response_json["tracks"]]
+        track = str(response_json["items"][number-1]["track"]["id"])
+        id = "spotify:track:"+track
+        print(id)
+        data = json.dumps({
+            "tracks": [
+                {
+                    "uri": id
+                }
+            ]
+        })
+        print(data)
+        response = self._place_delete_api_request(url, data)
+        response_json = response.json()
+        return response_json
+
     def populate_playlist(self, playlist, tracks):
         """Add tracks to a playlist.
 
@@ -73,6 +94,17 @@ class SpotifyClient:
 
     def _place_post_api_request(self, url, data):
         response = requests.post(
+            url,
+            data=data,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._authorization_token}"
+            }
+        )
+        return response
+
+    def _place_delete_api_request(self, url, data):
+        response = requests.delete(
             url,
             data=data,
             headers={
