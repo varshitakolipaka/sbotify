@@ -60,18 +60,29 @@ async def on_message(message):
                         main(query, addingurl)
                         print(addingurl)
                         break
-            for i in playlists:
-                print(i)
+            print(playlists)
             # main(query,"https://open.spotify.com/playlist/123gKtvvoFi0iNMjvTHsC3")
             # await output_channel.send(command)
             # await output_channel.send(mssg[1])
             # await output_channel.send(message.author.id)
+        elif is_command_delete(command):
+            print("DELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETE")
+            number = int(mssg[1])
+            for i in playlists:
+                if(i[0] == str(message.author.id)):
+                    # print(i[0])
+                    if (len(i) != 1):
+                        # print("yess")
+                        var = str(i[1].id)
+                        spotify_client.delete_song_by_position(number, var)
+                        break
+
         elif is_command_join(command):
             new_member = [str(message.author.id)]
             if str(message.author.id) in members:
                 myEmbed = discord.Embed(
                     title="You are already a part of the clan", description="Try {prefix} help to see all commands")
-                await output_channel.send(embed=myEmbed)t
+                await output_channel.send(embed=myEmbed)
             else:
                 playlists.append(new_member)
                 members.append(str(message.author.id))
