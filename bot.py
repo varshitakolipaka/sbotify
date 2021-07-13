@@ -38,7 +38,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    output_channel = client.get_channel(out_channel)
+    output_channel = message.channel
     input_mssg = message.content  # message.content is the string of that message
     if input_mssg[0] == '!':
         mssg = input_mssg.split(" ", 1)
@@ -136,4 +136,4 @@ async def on_message(message):
 
 
 # Run the client on this server
-client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.uN414vAZSXjIkRKA-L08ynOF4aI')
+client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.en-SE9Y-87G2u1soPxKwV4TSNQ0')
