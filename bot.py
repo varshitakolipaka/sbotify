@@ -1,6 +1,6 @@
 import os
 import re
-
+import json
 from spotifyclient import SpotifyClient
 from playlist import Playlist
 # import the discord library
@@ -25,15 +25,18 @@ prefix = '!'
 playlists = []
 # event refers to any new,.. well .... event xD, like sending a message,a reaction, a reply, a bot joining etc
 members = []
+personal_playlist = []
 
 
 @client.event
 # new event
 async def on_ready():
     # output_channel object holds the info of that channel, whos id is provided
-    output_channel = client.get_channel(out_channel)
+    # output_channel = client.get_channel(out_channel)
     # code to send message is
-    await output_channel.send("I art been summoneth.")
+    # await output_channel.send("I art been summoneth.")
+    print("lmao")
+f = open("lmao.json", 'w')
 
 
 @client.event
@@ -135,5 +138,6 @@ async def on_message(message):
             await output_channel.send(embed=myEmbed)
 
 
+f.close()
 # Run the client on this server
 client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.en-SE9Y-87G2u1soPxKwV4TSNQ0')
