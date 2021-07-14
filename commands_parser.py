@@ -42,3 +42,4 @@ def is_command_set(command):
         return 1
     else:
         return 0
+
