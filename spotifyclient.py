@@ -1,7 +1,5 @@
 import json
-
 import requests
-
 from track import Track
 from playlist import Playlist
 
@@ -17,12 +15,10 @@ class SpotifyClient:
         self._authorization_token = authorization_token
         self._user_id = user_id
 
-    def get_track_recommendations(self, query):
+    def get_track(self, query):
         url = f"https://api.spotify.com/v1/search?q={query}&type=track&limit=1&offset=0"
         response = self._place_get_api_request(url)
         response_json = response.json()
-        # tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
-        #           track in response_json["tracks"]]
         tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
                   track in response_json["tracks"]["items"]]
         return tracks

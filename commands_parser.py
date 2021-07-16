@@ -1,11 +1,13 @@
 # checks if a given command is in the list or not
 # list of commands
+# checking if a given command is in list, and returns false if not
+# swap function
 def swap(list, pos1, pos2):
 
     list[pos1], list[pos2] = list[pos2], list[pos1]
     return list
 
-
+# list of all commands 
 commands = ["add", "remove", "set", "join", "delete"]
 
 
