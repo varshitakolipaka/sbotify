@@ -9,16 +9,16 @@ from discord import message
 from discord import embeds
 from createplaylist import main
 from commands_parser import *
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
                                os.getenv("SPOTIFY_USER_ID"))
 # bot connect
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
-out_channel = 854832431764602901
+out_channel = 'default out channel'
 prefix = '!'
 
 # list of playlists
