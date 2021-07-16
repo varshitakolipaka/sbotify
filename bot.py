@@ -32,9 +32,9 @@ personal_playlist = []
 # new event
 async def on_ready():
     # output_channel object holds the info of that channel, whos id is provided
-    # output_channel = client.get_channel(out_channel)
+    output_channel = client.get_channel(out_channel)
     # code to send message is
-    # await output_channel.send("I art been summoneth.")
+    await output_channel.send("Bring yourself back online, Dolores.")
     print("lmao")
 f = open("lmao.json", 'w')
 
@@ -48,7 +48,7 @@ async def on_message(message):
         command = mssg[0][1:len(mssg[0])]
         if (str(message.author.id) not in members) and not(is_command_join(command)):
             myEmbed = discord.Embed(
-                title="Error", description="Uh Oh :(( , you are not yet part of the clan\n Use {prefix} join to be a part of noise_bot family!")
+                title="Error", description="Uh Oh :(( , you are not yet part of the clan\n Use " + prefix + " join to be a part of noise_bot family!")
             await output_channel.send(embed=myEmbed)
             return
         if is_command_add(command):
@@ -140,4 +140,5 @@ async def on_message(message):
 
 f.close()
 # Run the client on this server
-client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.uN414vAZSXjIkRKA-L08ynOF4aI')
+client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.en-SE9Y-87G2u1soPxKwV4TSNQ0')
+
