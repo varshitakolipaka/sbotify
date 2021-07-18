@@ -3,17 +3,15 @@ import re
 import json
 from spotifyclient import SpotifyClient
 from playlist import Playlist
-import database.db_mgmt
+# import database.db_mgmt
 # import the discord library
 import discord
 from discord import message
 from discord import embeds
 from createplaylist import main
 from commands_parser import *
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
+from dotenv import load_dotenv
+load_dotenv()
 spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
                                os.getenv("SPOTIFY_USER_ID"))
 # bot connect
@@ -97,6 +95,7 @@ async def on_message(message):
         elif is_command_set(command):
             flag1 = 0
             flag2 = 0
+            print(mssg[1])
             if(len(mssg) == 1):
                 myEmbed = discord.Embed(
                     title="Error", description="No argument specified.\n Try {prefix} help to see all commands")
