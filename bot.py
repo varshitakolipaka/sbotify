@@ -47,8 +47,9 @@ async def on_message(message):
         mssg = input_mssg.split(" ", 1)
         command = mssg[0][1:len(mssg[0])]
         if (str(message.author.id) not in members) and not(is_command_join(command)):
+            description_message = "Uh Oh :(( , you are not yet part of the clan\n Use " + prefix + " join to be a part of noise_bot family!"
             myEmbed = discord.Embed(
-                title="Error", description="Uh Oh :(( , you are not yet part of the clan\n Use " + prefix + " join to be a part of noise_bot family!")
+                title="Error", description = description_message)
             await output_channel.send(embed=myEmbed)
             return
         if is_command_add(command):
@@ -89,8 +90,9 @@ async def on_message(message):
             else:
                 playlists.append(new_member)
                 members.append(str(message.author.id))
+                description_message = "Try "  + "`" + prefix +  "help` to see all commands" 
                 myEmbed = discord.Embed(
-                    title="Welcome to the noise bot pawri!", description="Try {prefix} help to see all commands")
+                    title="Welcome to the noise bot pawri!", description=description_message)
                 await output_channel.send(embed=myEmbed)
             print(playlists)
             print(members)
