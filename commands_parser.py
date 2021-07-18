@@ -11,7 +11,7 @@ def swap(list, pos1, pos2):
 commands = ["add", "remove", "set", "join", "delete"]
 
 
-def is_command(command):
+def is_command(command): #hell bello
     if command in commands:
         return 1
     else:
