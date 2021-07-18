@@ -14,9 +14,9 @@ class DB:
 
 playlist_db = DB('playlist.db')
 # playlist_db.cur.execute('''
-# CREATE TABLE Members (member_id VARCHAR, top_playlist VARCHAR)''')
+# CREATE TABLE Members (member_id VARCHAR, set_playlist VARCHAR)''')
 playlist_db.cur.execute('''
-INSERT INTO Members(member_id, top_playlist)
+INSERT INTO Members(member_id, set_playlist)
 VALUES
     ('012','o'),
     ('123','a'),
@@ -34,6 +34,10 @@ def check_member(member_id):
     return flag
 flag1=check_member('678')
 print(flag1)
+def update_set_playlist(member):
+    col, res = playlist_db.run_query(f'''
+    UPDATE Members SET set_playlist = '{playlist_name}' WHERE member_id = '{}';
+     ''')
 
 # col, res = playlist_db.run_query("SELECT * FROM Members")
 # print(res)
