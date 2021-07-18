@@ -36,8 +36,10 @@ flag1=check_member('678')
 print(flag1)
 def update_set_playlist(member):
     col, res = playlist_db.run_query(f'''
-    UPDATE Members SET set_playlist = '{playlist_name}' WHERE member_id = '{}';
+    UPDATE Members SET set_playlist = '{playlist_name}' WHERE member_id='{member_id}'
      ''')
+
+update_set_playlist = 
 
 # col, res = playlist_db.run_query("SELECT * FROM Members")
 # print(res)
