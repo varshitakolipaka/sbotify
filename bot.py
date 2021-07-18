@@ -3,6 +3,7 @@ import re
 import json
 from spotifyclient import SpotifyClient
 from playlist import Playlist
+import database.db_mgmt
 # import the discord library
 import discord
 from discord import message
@@ -19,6 +20,7 @@ spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
 out_channel = 864414747947565057
+
 prefix = '!'
 
 # list of playlists
@@ -31,7 +33,7 @@ personal_playlist = []
 @client.event
 # new event
 async def on_ready():
-    # output_channel object holds the info of that channel, whos id is provided
+    # output_channel object holds the info of that channel, whos id is provided     
     output_channel = client.get_channel(out_channel)
     # code to send message is
     await output_channel.send("Bring yourself back online, Dolores.")
@@ -54,6 +56,7 @@ async def on_message(message):
             return
         if is_command_add(command):
             query = mssg[1]
+            
             for i in playlists:
                 if(i[0] == str(message.author.id)):
                     # print(i[0])
@@ -65,10 +68,6 @@ async def on_message(message):
                         print(addingurl)
                         break
             print(playlists)
-            # main(query,"https://open.spotify.com/playlist/123gKtvvoFi0iNMjvTHsC3")
-            # await output_channel.send(command)
-            # await output_channel.send(mssg[1])
-            # await output_channel.send(message.author.id)
         elif is_command_delete(command):
             print("DELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETE")
             number = int(mssg[1])
