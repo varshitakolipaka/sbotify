@@ -49,7 +49,7 @@ async def on_message(message):
             myEmbed = discord.Embed(
                 title="Error", description=f"Uh Oh :(( , you are not yet part of the clan\n Use {prefix} join to be a part of noise_bot family!")
             await output_channel.send(embed=myEmbed)
-        if is_command_add(command):
+        elif is_command_add(command):
             query = mssg[1]
             playlist_name, playlist_id = sbotify_db.return_set_playlists(
                 str(message.author.id))
