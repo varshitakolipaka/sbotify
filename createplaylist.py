@@ -10,9 +10,8 @@ def main(query,playlist_name):
                                    os.getenv("SPOTIFY_USER_ID"))
     # replace spaces with %20
     query = query.replace(" ","%20")
-
-    # using the function "get_track_recommendations"
-    added_song = spotify_client.get_track_recommendations(query)
+    # using the function "get_track"
+    added_song = spotify_client.get_track(query)
     for index, track in enumerate(added_song):
         print(f"{index+1}- {track}")
 
