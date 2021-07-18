@@ -56,7 +56,6 @@ async def on_message(message):
             return
         if is_command_add(command):
             query = mssg[1]
-            
             for i in playlists:
                 if(i[0] == str(message.author.id)):
                     # print(i[0])
