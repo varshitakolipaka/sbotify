@@ -1,0 +1,4 @@
+discord
+requests
+python-dotenv
+git+https://github.com/Rapptz/discord.py
