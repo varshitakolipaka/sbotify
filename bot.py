@@ -75,6 +75,8 @@ async def on_message(message):
 
         elif is_command_join(command):
             new_member = str(message.author.id)
+            #DELETE NEXT LINE AFTER TESTING
+            sbotify_db.insert_members('755673930215194664')
             if sbotify_db.check_member(new_member) == 1:
                 myEmbed = discord.Embed(
                     title="You are already a part of the clan", description=f"Try {prefix} help to see all commands")
