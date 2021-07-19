@@ -8,7 +8,7 @@ Make public playlists with friends on the MusiCoco Spotify Account, or authorise
   
 ### 2. Using the commands
   `!join` to join the userbase. This is required the first time you use the bot. 
-  
+ 
   
   `!set <playlist name>` to set current playlist to `<playlist name>`. You will be prompted to add <playlist name> if it doesn't exist.
   
