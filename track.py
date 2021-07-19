@@ -7,7 +7,7 @@ class Track:
         :param id (int): Spotify track id
         :param artist (str): Artist who created the track
         """
-        # inherting properties
+        # inherts properties
         self.name = name
         self.id = id
         self.artist = artist
