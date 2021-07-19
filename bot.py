@@ -2,10 +2,8 @@ import os
 import json
 from spotifyclient import SpotifyClient
 from playlist import Playlist
-#importing database creating file and class spotify_db
 from database.db_mgmt import sbotify_db
-from discord import message
-from discord import embeds
+import discord
 from createplaylist import main
 from commands_parser import *
 from dotenv import load_dotenv
