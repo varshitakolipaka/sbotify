@@ -22,7 +22,7 @@ playlists = []
 # event refers to any new,.. well .... event xD, like sending a message,a reaction, a reply, a bot joining etc
 members = []
 personal_playlist = []
-
+motor_functions = [0]
 
 @client.event
 # new event
@@ -36,11 +36,17 @@ async def on_ready():
     print("bot started")
 
 
+
 @client.event
 async def on_message(message):
     output_channel = client.get_channel(out_channel)
+    print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
-    if input_mssg[0] == '!':
+    if input_mssg.lower() == 'freeze all motor functions' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+        motor_functions[0] = 1
+    if input_mssg.lower() == 'bring yourself back online' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+        motor_functions[0] = 0
+    if input_mssg[0] == '!' and motor_functions[0] == 0:
         mssg = input_mssg.split(" ", 1)
         command = mssg[0][1:len(mssg[0])]
         if (sbotify_db.check_member(message.author.id) == 0) and (command != 'join'):
@@ -75,7 +81,7 @@ async def on_message(message):
 
         elif is_command_join(command):
             new_member = str(message.author.id)
-            #DELETE NEXT LINE AFTER TESTING
+            # DELETE NEXT LINE AFTER TESTING
             sbotify_db.insert_members('755673930215194664')
             if sbotify_db.check_member(new_member) == 1:
                 myEmbed = discord.Embed(
@@ -105,12 +111,12 @@ async def on_message(message):
                     name = sbotify_db.return_playlist_id(mssg[1])
                     sbotify_db.update_set_playlist(
                         str(message.author.id), str(name))
-                    playlist_name, playlist_id = sbotify_db.return_set_playlists(str(message.author.id))
+                    playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                        str(message.author.id))
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                     myEmbed = discord.Embed(
                         title="Playlist set", description=f"Playlist set to [{playlist_name}]({addingurl})")
                     await output_channel.send(embed=myEmbed)
-                    
 
             if(flag1 == 0):
                 myEmbed = discord.Embed(
@@ -120,7 +126,7 @@ async def on_message(message):
             elif(flag2 == 0):
                 new_playlist = spotify_client.create_playlist(mssg[1])
                 print(new_playlist)
-                sbotify_db.insert_playlist(new_playlist.name, new_playlist.id)
+                sbotify_db.insert_playlist(new_playlist.name, new_playlist.id,str(message.author.id))
                 sbotify_db.update_set_playlist(
                     str(message.author.id), new_playlist.id)
                 myEmbed = discord.Embed(
