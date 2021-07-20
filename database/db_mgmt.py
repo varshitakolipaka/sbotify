@@ -16,9 +16,9 @@ class DB:
     INSERT INTO Members(member_id, set_playlist) VALUES ('{member_id}', '0')
     ''')
 
-    def insert_playlist(self, playlist_name, playlist_id):
+    def insert_playlist(self, playlist_name, playlist_id, member_id):
         self.cur.execute(f'''
-        INSERT INTO Playlists VALUES ('{playlist_name}','{playlist_id}')
+        INSERT INTO Playlists VALUES ('{playlist_name}','{playlist_id}','{member_id}')
         ''')
 
     def return_set_playlists(self, member_id):
@@ -63,21 +63,23 @@ class DB:
 
     def print_db(self, table_name):
         col, res = self.run_query(f"SELECT * FROM {table_name}")
+        print(col)
         print(res)
+    def clean_db(self):
+        self.delete_all_entries('Members')
+        self.delete_all_entries('Playlists')
+
+    def delete_all_entries(self,table_name):
+        self.cur.execute(f"DELETE FROM {table_name}")
+        self.db.commit()
 
 
 sbotify_db = DB('./database/playlist.db')
-# delete table Members
 
 
-# def delete_all_entries(table_name):
-#     sbotify_db.cur.execute(f"DELETE FROM {table_name}")
-#     sbotify_db.db.commit()
-
-# delete_all_entries('Members')
-# delete_all_entries('Playlists')
+sbotify_db.clean_db()
 # sbotify_db.insert_members('1234')
-# sbotify_db.insert_playlist('test', '1234')
+# sbotify_db.insert_playlist('test', '1234', 'gaur')
 # sbotify_db.update_set_playlist('1234', 'name of thingy')
 # sbotify_db.print_db('Members')
 # sbotify_db.print_db('Playlists')
@@ -87,3 +89,5 @@ sbotify_db = DB('./database/playlist.db')
 # print(flag1)
 # print(flag2)
 # Printing the table contents
+# sbotify_db.cur.execute('''ALTER TABLE playlists
+# ADD created_by VARCHAR;''')
