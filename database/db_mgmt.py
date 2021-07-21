@@ -65,13 +65,30 @@ class DB:
         col, res = self.run_query(f"SELECT * FROM {table_name}")
         print(col)
         print(res)
+
     def clean_db(self):
         self.delete_all_entries('Members')
         self.delete_all_entries('Playlists')
 
-    def delete_all_entries(self,table_name):
+    def delete_all_entries(self, table_name):
         self.cur.execute(f"DELETE FROM {table_name}")
         self.db.commit()
+
+    def list_all_playlists(self, author_id):
+        if author_id == 'all':
+            col, res = self.run_query(f'''
+            SELECT * FROM Playlists
+            ''')
+        else:
+            col, res = self.run_query(f'''
+            SELECT * FROM Playlists WHERE created_by='{author_id}'
+            ''')
+        if len(res) == 0:
+            return 0
+        return res
+
+    def close_db(self):
+        self.db.close()
 
 
 sbotify_db = DB('./database/playlist.db')

@@ -1,5 +1,7 @@
 import os
 import json
+
+from dotenv.main import dotenv_values
 from spotifyclient import SpotifyClient
 from playlist import Playlist
 from database.db_mgmt import sbotify_db
@@ -23,6 +25,15 @@ playlists = []
 members = []
 personal_playlist = []
 motor_functions = [0]
+def get_command_help():
+    return '''
+    1. `!help` : **this message**
+    2. `!set <playlist name>`: **sets the playlist to default or creates one if not created **
+    3. `!add <song name>` : **adds a song to the playlist**
+    4. `!delete <song name>` : **deletes a song from the playlist**
+    5. `!join` : **join the clan**
+    6. `!list <author name>` : **list all songs of the author (put `all` for all playlists)**
+    '''
 
 @client.event
 # new event
@@ -33,9 +44,7 @@ async def on_ready():
     output_channel = client.get_channel(out_channel)
     # code to send message is
     await output_channel.send("Bring yourself back online, Dolores.")
-    print("bot started")
-
-
+    print("bot started")     
 
 @client.event
 async def on_message(message):
@@ -53,30 +62,72 @@ async def on_message(message):
             myEmbed = discord.Embed(
                 title="Error", description=f"Uh Oh :(( , you are not yet part of the clan\n Use {prefix} join to be a part of noise_bot family!")
             await output_channel.send(embed=myEmbed)
-        elif is_command_add(command):
-            query = mssg[1]
-            playlist_name, playlist_id = sbotify_db.return_set_playlists(
-                str(message.author.id))
-            print(playlist_name)
-            if(playlist_id == '0'):
-                await output_channel.send("You have no playlists set")
-            else:
-                addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
-                main(query, addingurl)
+        elif command == 'print':
+            print(message.content)
+        elif is_command_help(command):
+            myEmbed = discord.Embed(
+                title="Help", description=get_command_help())
+            await output_channel.send(embed=myEmbed)
+        elif is_command_list(command):
+            try:
+                query = str(mssg[1])
+                if query.startswith('<@!') and query.endswith('>'):
+                    query = query[3:]
+                    query = query[:len(query) - 1]
+                ret_val = sbotify_db.list_all_playlists(query)
+                # print(query)
+            except:
+                ret_val = sbotify_db.list_all_playlists(message.author.id)
+                # print(message.author.id)
+            if ret_val == 0:
                 myEmbed = discord.Embed(
-                    title="Elon Aproves :triumph:", description=f"Song added to [{playlist_name}]({addingurl})")
+                    title="No Playlists :pensive:", description=f'''Uh Oh :(( , there aren't any playlists created by this author\n Use `{prefix}set <name>` to create and set playlists\n
+                    Use `{prefix}help` to see all commands.''')
                 await output_channel.send(embed=myEmbed)
-        elif is_command_delete(command):
-            number = int(mssg[1])
-            playlist_name, playlist_id = sbotify_db.return_set_playlists(
-                str(message.author.id))
-            if (playlist_id == '0'):
-                await output_channel.send("You have no playlists set")
             else:
-                addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
-                spotify_client.delete_song_by_position(number, playlist_id)
+                # discord embed to list all values of ret_val
+                send_message = ''
+                for i in ret_val:
+                    send_message += f'''[**{ret_val.index(i)+1}. {i[0]}**](https://open.spotify.com/playlist/{i[1]})\nCreated by: <@!{i[2]}>\n\n'''
                 myEmbed = discord.Embed(
-                    title="ELon Disproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
+                    title="Playlists", description=send_message)
+                await output_channel.send(embed=myEmbed)
+
+        elif is_command_add(command):
+            try:
+                query = mssg[1]
+                playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                    str(message.author.id))
+                print(playlist_name)
+                if(playlist_id == '0'):
+                    await output_channel.send("You have no playlists set")
+                else:
+                    addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
+                    main(query, addingurl)
+                    myEmbed = discord.Embed(
+                        title="Elon Aproves :triumph:", description=f"Song added to [{playlist_name}]({addingurl})")
+                    await output_channel.send(embed=myEmbed)
+            except:
+                myEmbed = discord.Embed(
+                    title="Error", description=f"No argument specified.\n Try {prefix} help to see all commands")
+                await output_channel.send(embed=myEmbed)
+
+        elif is_command_delete(command):
+            try:
+                number = int(mssg[1])
+                playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                    str(message.author.id))
+                if (playlist_id == '0'):
+                    await output_channel.send("You have no playlists set")
+                else:
+                    addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
+                    spotify_client.delete_song_by_position(number, playlist_id)
+                    myEmbed = discord.Embed(
+                        title="ELon Disproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
+                    await output_channel.send(embed=myEmbed)
+            except:
+                myEmbed = discord.Embed(
+                    title="Error", description=f"No argument specified.\n Try {prefix} help to see all commands")
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_join(command):
@@ -97,7 +148,7 @@ async def on_message(message):
         elif is_command_set(command):
             flag1 = 0
             flag2 = 0
-            print(mssg[1])
+            # print(mssg[1])
 
             if(len(mssg) == 1):
                 myEmbed = discord.Embed(
@@ -126,7 +177,8 @@ async def on_message(message):
             elif(flag2 == 0):
                 new_playlist = spotify_client.create_playlist(mssg[1])
                 print(new_playlist)
-                sbotify_db.insert_playlist(new_playlist.name, new_playlist.id,str(message.author.id))
+                sbotify_db.insert_playlist(
+                    new_playlist.name, new_playlist.id, str(message.author.id))
                 sbotify_db.update_set_playlist(
                     str(message.author.id), new_playlist.id)
                 myEmbed = discord.Embed(
@@ -137,7 +189,6 @@ async def on_message(message):
             myEmbed = discord.Embed(
                 title="Error", description=f"This is not a recognized command.\n Try {prefix} help to see all commands")
             await output_channel.send(embed=myEmbed)
-
         sbotify_db.db.commit()
 
 # Run the client on this server
