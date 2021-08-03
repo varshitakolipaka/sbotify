@@ -25,6 +25,8 @@ playlists = []
 members = []
 personal_playlist = []
 motor_functions = [0]
+
+
 def get_command_help():
     return '''
     1. `!help` : **this message**
@@ -32,8 +34,9 @@ def get_command_help():
     3. `!add <song name>` : **adds a song to the playlist**
     4. `!delete <song name>` : **deletes a song from the playlist**
     5. `!join` : **join the clan**
-    6. `!list <author name>` : **list all songs of the author (put `all` for all playlists)**
+    6. `!list<page number (optional)> <author name>` : **list all songs of the author (put `all` for all playlists)**
     '''
+
 
 @client.event
 # new event
@@ -44,7 +47,8 @@ async def on_ready():
     output_channel = client.get_channel(out_channel)
     # code to send message is
     await output_channel.send("Bring yourself back online, Dolores.")
-    print("bot started")     
+    print("bot started")
+
 
 @client.event
 async def on_message(message):
@@ -69,6 +73,18 @@ async def on_message(message):
                 title="Help", description=get_command_help())
             await output_channel.send(embed=myEmbed)
         elif is_command_list(command):
+            page = 0
+            if(command == "list"):
+                page = 1
+            else:
+                try:
+                    page = int(command[4:])
+                    # print(page)
+                except:
+                    myEmbed = discord.Embed(
+                        title="Error", description=f"This is not a recognized command.\n Try `{prefix}help` to see all commands")
+                    await output_channel.send(embed=myEmbed)
+                    return
             try:
                 query = str(mssg[1])
                 if query.startswith('<@!') and query.endswith('>'):
@@ -86,11 +102,23 @@ async def on_message(message):
                 await output_channel.send(embed=myEmbed)
             else:
                 # discord embed to list all values of ret_val
+                playlist_len = ret_val.__len__()
+                # print(playlist_len)
+                if(playlist_len <= (page-1)*10 or page <= 0):
+                    myEmbed = discord.Embed(
+                        title="Page Doesn't Exist", description=f"There are only {int(playlist_len/10) + 1} Pages.\n Try `{prefix}help` to see all commands")
+                    await output_channel.send(embed=myEmbed)
+                    return
                 send_message = ''
+                # print("till here")
                 for i in ret_val:
+                    if ret_val.index(i) < (page-1)*10:
+                        continue
+                    if ret_val.index(i) >= page*10:
+                        break
                     send_message += f'''[**{ret_val.index(i)+1}. {i[0]}**](https://open.spotify.com/playlist/{i[1]})\nCreated by: <@!{i[2]}>\n\n'''
                 myEmbed = discord.Embed(
-                    title="Playlists", description=send_message)
+                    title="Playlists", description=f"{send_message}Page: {page} of {int(playlist_len/10) + 1}")
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_add(command):

@@ -46,7 +46,7 @@ def is_command_set(command):
         return 0
 
 def is_command_list(command):
-    if(is_command(command) and command == "list"):
+    if(command[0:4] == "list"):
         return 1
     else:
         return 0
