@@ -1,5 +1,6 @@
 import json
 import requests
+from requests.models import Response
 from track import Track
 from playlist import Playlist
 
@@ -64,6 +65,17 @@ class SpotifyClient:
         response_json = response.json()
         return response_json
 
+    def rename_playlist(self, playlist_id, new_name):
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
+        print(url)
+        data = json.dumps({
+            "name": new_name,
+            "public": "false"
+        })
+        response=self._place_put_api_request(url,data)
+        respnse_json=response.json()
+        return respnse_json
+        
     def populate_playlist(self, playlist, tracks):
         """Add tracks to a playlist.
 
@@ -87,7 +99,16 @@ class SpotifyClient:
             }
         )
         return response
-
+    def _place_put_api_request(self, url, data):
+        response = requests.put(
+            url,
+            data=data,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._authorization_token}"
+            }
+        )
+        return response
     def _place_post_api_request(self, url, data):
         response = requests.post(
             url,
