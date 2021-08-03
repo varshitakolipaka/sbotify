@@ -172,7 +172,19 @@ async def on_message(message):
                 myEmbed = discord.Embed(
                     title="Welcome to the noise bot pawri!", description=description_message)
                 await output_channel.send(embed=myEmbed)
-
+        elif is_command_rename(command):
+            if sbotify_db.check_playlist(mssg[1]) == 0:
+                playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                    str(message.author.id))
+                if (playlist_id == '0'):
+                    await output_channel.send("You have no playlists set")
+                    return
+                sbotify_db.rename_playlist(message.author.id, mssg[1])
+                spotify_client.rename_playlist(playlist_id, mssg[1])
+            else:
+                myEmbed = discord.Embed(
+                    title="Playlist already exists", description=f"Playlist by the name {mssg[1]} already exists.\nThink of a new name")
+                await output_channel.send(embed=myEmbed)
         elif is_command_set(command):
             flag1 = 0
             flag2 = 0

@@ -61,6 +61,17 @@ class DB:
         else:
             return None
 
+    def rename_playlist(self, member_id, new_name):
+        if self.check_member(member_id) == 1:
+            col, res = self.run_query(f'''
+            SELECT * FROM Members WHERE member_id='{member_id}'
+            ''')
+            playlist_id = res[0][1]
+            print(res)
+            self.cur.execute(
+                f'''UPDATE Playlists SET playlist_name= '{new_name}' WHERE playlist_id='{playlist_id}'
+                ''')
+
     def print_db(self, table_name):
         col, res = self.run_query(f"SELECT * FROM {table_name}")
         print(col)
