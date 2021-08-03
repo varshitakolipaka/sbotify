@@ -70,12 +70,11 @@ class SpotifyClient:
         print(url)
         data = json.dumps({
             "name": new_name,
-            "public": "false"
         })
-        response=self._place_put_api_request(url,data)
-        respnse_json=response.json()
+        response = self._place_put_api_request(url, data)
+        respnse_json = response.json()
         return respnse_json
-        
+
     def populate_playlist(self, playlist, tracks):
         """Add tracks to a playlist.
 
@@ -99,6 +98,7 @@ class SpotifyClient:
             }
         )
         return response
+
     def _place_put_api_request(self, url, data):
         response = requests.put(
             url,
@@ -109,6 +109,7 @@ class SpotifyClient:
             }
         )
         return response
+
     def _place_post_api_request(self, url, data):
         response = requests.post(
             url,

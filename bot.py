@@ -179,6 +179,10 @@ async def on_message(message):
                 if (playlist_id == '0'):
                     await output_channel.send("You have no playlists set")
                     return
+                addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
+                myEmbed = discord.Embed(
+                    title="Playlist set", description=f"Playlist set to [{mssg[1]}]({addingurl})")
+                await output_channel.send(embed=myEmbed)
                 sbotify_db.rename_playlist(message.author.id, mssg[1])
                 spotify_client.rename_playlist(playlist_id, mssg[1])
             else:
