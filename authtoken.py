@@ -30,7 +30,7 @@ while True:
         access_token = None
 
     # print(access_token)
-    sleep(3599 - time() % 3599)
+    
 
     f = open('.env', 'w')
     to_write = '''SPOTIFY_USER_ID="y4ob0twgc8h44hcxkor64bvc3"''' + \
@@ -38,4 +38,5 @@ while True:
     # print(to_write)
     f.write(to_write)
     f.close()
+    sleep(3599 - time() % 3599)
     # break
