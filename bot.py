@@ -64,7 +64,7 @@ async def on_message(message):
         command = mssg[0][1:len(mssg[0])]
         if (sbotify_db.check_member(message.author.id) == 0) and (command != 'join'):
             myEmbed = discord.Embed(
-                title="Error", description=f"Uh Oh :(( , you are not yet part of the clan\n Use {prefix} join to be a part of noise_bot family!")
+                title="Error", description=f"Uh Oh :(( , you are not yet part of the clan\n Use `{prefix}join` to be a part of noise_bot family!")
             await output_channel.send(embed=myEmbed)
         elif command == 'print':
             print(message.content)
