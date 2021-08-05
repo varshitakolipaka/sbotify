@@ -38,5 +38,5 @@ while True:
     # print(to_write)
     f.write(to_write)
     f.close()
-    sleep(5 - time() % 5)
+    sleep(3599 - time() % 3599)
     # break
