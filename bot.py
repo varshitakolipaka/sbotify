@@ -32,7 +32,7 @@ def get_command_help():
     1. `!help` : **this message**
     2. `!set <playlist name>`: **sets the playlist to default or creates one if not created **
     3. `!add <song name>` : **adds a song to the playlist**
-    4. `!delete <song name>` : **deletes a song from the playlist**
+    4. `!delete <song number>` : **deletes a song from the playlist**
     5. `!join` : **join the clan**
     6. `!list<page number (optional)> <author name>` : **list all songs of the author (put `all` for all playlists)**
     '''
