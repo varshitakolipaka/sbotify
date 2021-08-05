@@ -52,7 +52,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    output_channel = client.get_channel(out_channel)
+    output_channel = message.channel
     print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
     if input_mssg.lower() == 'freeze all motor functions' and (message.author.id == 723826054824722472 or message.author.id == 753604273345921155):
