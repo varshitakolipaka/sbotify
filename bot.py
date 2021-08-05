@@ -52,6 +52,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
+                                   os.getenv("SPOTIFY_USER_ID"))
     output_channel = message.channel
     print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
