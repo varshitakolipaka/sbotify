@@ -3,7 +3,7 @@ import requests
 from requests.models import Response
 from track import Track
 from playlist import Playlist
-
+import validators
 
 class SpotifyClient:
     """SpotifyClient performs operations using the Spotify API."""
@@ -23,6 +23,29 @@ class SpotifyClient:
         tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
                   track in response_json["tracks"]["items"]]
         return tracks
+    def check_valid_url(self, link):
+        link = link.rsplit('/', 1)[-1]
+        link = link[ 0 : 22 ]
+        url = f"https://api.spotify.com/v1/tracks/{link}"
+        response = self._place_get_api_request(url)
+        response_json = response.json()
+        key = 'error'
+        if(key in response_json.keys()):
+            return 0
+        else:
+            return 1
+    def add_url_to_playlist(self, url, playlist_id):
+        url = url.rsplit('/', 1)[-1]
+        url = url[ 0 : 22 ]        
+        url = ("spotify:track:"+url)
+        list = []
+        list.append(url)
+        data = json.dumps(list)
+        print(data)
+        req_link = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        response = self._place_post_api_request(req_link, data)
+        response_json = response.json()
+        return response_json
 
     def create_playlist(self, name):
         """
@@ -31,7 +54,7 @@ class SpotifyClient:
         """
         data = json.dumps({
             "name": name,
-            "description": "Recommended songs",
+            "description": "Your playlist",
             "public": True
         })
         url = f"https://api.spotify.com/v1/users/{self._user_id}/playlists"
@@ -42,6 +65,24 @@ class SpotifyClient:
         playlist_id = response_json["id"]
         playlist = Playlist(name, playlist_id)
         return playlist
+    def populate_playlist(self, playlist, tracks):
+        """Add tracks to a playlist.
+
+        :param playlist (Playlist): Playlist to which to add tracks
+        :param tracks (list of Track): Tracks to be added to playlist
+        :return response: API response
+        """
+        
+        track_uris = [track.create_spotify_uri() for track in tracks]
+        print(track_uri)
+        data = json.dumps(track_uris)
+        
+        print(data)
+        url = f"https://api.spotify.com/v1/playlists/{playlist}/tracks"
+        response = self._place_post_api_request(url, data)
+        response_json = response.json()
+        return response_json
+    
 
     def delete_song_by_position(self, number, playlist_id):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
@@ -51,15 +92,9 @@ class SpotifyClient:
         # tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
         #           track in response_json["tracks"]]
         track = str(response_json["items"][number-1]["track"]["id"])
-        id = "spotify:track:"+track
-        print(id)
-        data = json.dumps({
-            "tracks": [
-                {
-                    "uri": id
-                }
-            ]
-        })
+        id = list("spotify:track:"+track)
+        
+        data = json.dumps(id)
         print(data)
         response = self._place_delete_api_request(url, data)
         response_json = response.json()
@@ -75,6 +110,16 @@ class SpotifyClient:
         respnse_json = response.json()
         return respnse_json
 
+    def describe_playlist(self, playlist_id, new_name):
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
+        print(url)
+        data = json.dumps({
+            "description": new_name,
+        })
+        response = self._place_put_api_request(url, data)
+        respnse_json = response.json()
+        return respnse_json
+
     def populate_playlist(self, playlist, tracks):
         """Add tracks to a playlist.
 
@@ -83,7 +128,10 @@ class SpotifyClient:
         :return response: API response
         """
         track_uris = [track.create_spotify_uri() for track in tracks]
+        print(track_uris)
+        
         data = json.dumps(track_uris)
+        print(data)
         url = f"https://api.spotify.com/v1/playlists/{playlist}/tracks"
         response = self._place_post_api_request(url, data)
         response_json = response.json()
