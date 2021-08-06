@@ -82,8 +82,6 @@ class SpotifyClient:
         response = self._place_post_api_request(url, data)
         response_json = response.json()
         return response_json
-    
-
     def delete_song_by_position(self, number, playlist_id):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         print(url)
@@ -92,14 +90,20 @@ class SpotifyClient:
         # tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
         #           track in response_json["tracks"]]
         track = str(response_json["items"][number-1]["track"]["id"])
-        id = list("spotify:track:"+track)
-        
-        data = json.dumps(id)
+        id = "spotify:track:"+track
+        print(id)
+        data = json.dumps({
+            "tracks": [
+                {
+                    "uri": id
+                }
+            ]
+        })
         print(data)
         response = self._place_delete_api_request(url, data)
         response_json = response.json()
         return response_json
-
+    
     def rename_playlist(self, playlist_id, new_name):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
         print(url)
