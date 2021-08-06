@@ -9,7 +9,7 @@ def swap(list, pos1, pos2):
 
 
 # list of all commands
-commands = ["add", "remove", "set", "join", "delete", "list", "help", "rename"]
+commands = ["add", "remove", "set", "join", "delete", "list", "help", "rename", "describe"]
 
 
 def is_command(command):  # hell bello
@@ -63,6 +63,12 @@ def is_command_help(command):
 
 def is_command_rename(command):
     if(is_command(command) and command == "rename"):
+        return 1
+    else:
+        return 0
+
+def is_command_describe(command):
+    if(is_command(command) and command == "describe"):
         return 1
     else:
         return 0

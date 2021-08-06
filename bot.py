@@ -29,25 +29,25 @@ motor_functions = [0]
 
 def get_command_help():
     return '''
-    1. `!help` : **this message**
-    2. `!set <playlist name>`: **sets the playlist to default or creates one if not created **
-    3. `!add <song name>` : **adds a song to the playlist**
-    4. `!delete <song number>` : **deletes a song from the playlist**
-    5. `!join` : **join the clan**
-    6. `!list<page number (optional)> <author name>` : **list all songs of the author (put `all` for all playlists)**
+    1. `!help` : this message
+    2. `!set <playlist name>`: sets the playlist to default or creates one if not created 
+    3. `!add <song name>` : adds a song to the playlist
+    4. `!delete <song number>` : deletes a song from the playlist
+    5. `!join` : join the clan
+    6. `!list<page number (optional)> <author name>` : list all songs of the author (put `all` for all playlists)
     '''
 
 
 @client.event
 # new event
 async def on_ready():
-    sbotify_db.print_db('Playlists')
-    sbotify_db.print_db('Members')
+    # sbotify_db.print_db('Playlists')
+    # sbotify_db.print_db('Members')
     # output_channel object holds the info of that channel, whos id is provided
     output_channel = client.get_channel(out_channel)
     # code to send message is
     await output_channel.send("Bring yourself back online, Dolores.")
-    print("bot started")
+    # print("bot started")
 
 
 @client.event
@@ -128,14 +128,19 @@ async def on_message(message):
                 query = mssg[1]
                 playlist_name, playlist_id = sbotify_db.return_set_playlists(
                     str(message.author.id))
-                print(playlist_name)
                 if(playlist_id == '0'):
                     await output_channel.send("You have no playlists set")
+                elif(spotify_client.check_valid_url(query) == 1):
+                    spotify_client.add_url_to_playlist(query, playlist_id)
+                    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+                    print("HAHAHAAHAHHAA LINKKKKK")
+                    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 else:
+                    
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                     main(query, addingurl)
                     myEmbed = discord.Embed(
-                        title="Elon Aproves :triumph:", description=f"Song added to [{playlist_name}]({addingurl})")
+                        title="Elon Approves :triumph:", description=f"Song added to [{playlist_name}]({addingurl})")
                     await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(
@@ -153,11 +158,11 @@ async def on_message(message):
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                     spotify_client.delete_song_by_position(number, playlist_id)
                     myEmbed = discord.Embed(
-                        title="ELon Disproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
+                        title="Elon Disapproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
                     await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(
-                    title="Error", description=f"No argument specified.\n Try {prefix} help to see all commands")
+                    title="Error", description=f"No argument specified.\n Try {prefix} help to see usage.")
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_join(command):
@@ -172,7 +177,7 @@ async def on_message(message):
                 sbotify_db.insert_members(new_member)
                 description_message = "Try " + "`" + prefix + "help` to see all commands"
                 myEmbed = discord.Embed(
-                    title="Welcome to the noise bot pawri!", description=description_message)
+                    title="Welcome to the noise bot family!", description=description_message)
                 await output_channel.send(embed=myEmbed)
         elif is_command_rename(command):
             if sbotify_db.check_playlist(mssg[1]) == 0:
@@ -183,7 +188,7 @@ async def on_message(message):
                     return
                 addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                 myEmbed = discord.Embed(
-                    title="Playlist set", description=f"Playlist set to [{mssg[1]}]({addingurl})")
+                    title="Playlist Renamed", description=f"Playlist renamed to [{mssg[1]}]({addingurl})")
                 await output_channel.send(embed=myEmbed)
                 sbotify_db.rename_playlist(message.author.id, mssg[1])
                 spotify_client.rename_playlist(playlist_id, mssg[1])
@@ -191,6 +196,23 @@ async def on_message(message):
                 myEmbed = discord.Embed(
                     title="Playlist already exists", description=f"Playlist by the name {mssg[1]} already exists.\nThink of a new name")
                 await output_channel.send(embed=myEmbed)
+        elif is_command_describe(command):
+            if sbotify_db.check_playlist(mssg[1]) == 0:
+                playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                    str(message.author.id))
+                if (playlist_id == '0'):
+                    await output_channel.send("You have no playlists set")
+                    return
+                addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
+                myEmbed = discord.Embed(
+                    title="Playlist description changed", description=f"Playlist description changed to **{mssg[1]}**")
+                await output_channel.send(embed=myEmbed)
+                spotify_client.describe_playlist(playlist_id, mssg[1])
+            else:
+                myEmbed = discord.Embed(
+                    title="Error", description=f"Something went wrong, Please try again, see `!help` for usage.")
+                await output_channel.send(embed=myEmbed)
+
         elif is_command_set(command):
             flag1 = 0
             flag2 = 0
