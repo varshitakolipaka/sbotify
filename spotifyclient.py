@@ -74,7 +74,7 @@ class SpotifyClient:
         """
         
         track_uris = [track.create_spotify_uri() for track in tracks]
-        print(track_uri)
+        print(track_uris)
         data = json.dumps(track_uris)
         
         print(data)
