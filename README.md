@@ -26,13 +26,15 @@ You will also require a refresh token incase you want to change the auth token. 
   
   - `!add <song name>` to add a song to the set playlist.  
   
-  - `!list` to list your playlist
+  - `!list` to list your playlist.
   
-  - `!list<number>` to list playlists on page number <number>
+  - `!list<number>` to list playlists on page number <number>.
   
   - `!list all` to list ALL the playlists in the userbase, haha, just don't use this :)
   
   - `!rename <new_name>` to rename the set playlist to <new_name>
+  
+  - `!describe` to add a describe the set playlist to the specified description.
   
   
   
