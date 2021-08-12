@@ -1,1 +1,1 @@
-worker: python3 bot.py & python3 authtoken.py & wait -n  
+worker: python3 bot.py & python3 authtoken.py
