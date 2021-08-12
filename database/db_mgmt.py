@@ -10,6 +10,14 @@ class DB:
     def run_query(self, query):
         self.cur.execute(query)
         return [i[0] for i in self.cur.description], self.cur.fetchall()
+    def make_tables(self):
+        self.cur.execute('''
+        CREATE TABLE Members(member_id TEXT, set_playlist TEXT)
+        ''')
+        self.cur.execute('''
+        CREATE TABLE Playlists(playlist_name TEXT, playlist_id TEXT, created_by TEXT)
+        ''')
+        self.db.commit()
 
     def insert_members(self, member_id):
         self.cur.execute(f'''
@@ -102,10 +110,10 @@ class DB:
         self.db.close()
 
 
-sbotify_db = DB('./database/playlist.db')
+sbotify_db = DB('./database/playlists.db')
 
-
-# sbotify_db.clean_db()
+# sbotify_db.make_tables()
+sbotify_db.clean_db()
 # sbotify_db.insert_members('1234')
 # sbotify_db.insert_playlist('test', '1234', 'gaur')
 # sbotify_db.update_set_playlist('1234', 'name of thingy')
