@@ -113,7 +113,7 @@ class DB:
 sbotify_db = DB('./database/playlists.db')
 
 # sbotify_db.make_tables()
-sbotify_db.clean_db()
+# sbotify_db.clean_db()
 # sbotify_db.insert_members('1234')
 # sbotify_db.insert_playlist('test', '1234', 'gaur')
 # sbotify_db.update_set_playlist('1234', 'name of thingy')
