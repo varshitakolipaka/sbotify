@@ -42,8 +42,6 @@ def get_command_help():
 
   - `!list<number>` to list playlists on page number <number>.
 
-  - `!list all` to list ALL the playlists in the userbase, haha, just don't use this :slight_smile:
-
   - `!rename <new_name>` to rename the set playlist to <new_name>
 
   - `!describe <description>` to add a describe the set playlist to the specified description.
