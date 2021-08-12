@@ -29,13 +29,27 @@ motor_functions = [0]
 
 def get_command_help():
     return '''
-    1. `!help` : this message
-    2. `!set <playlist name>`: sets the playlist to default or creates one if not created 
-    3. `!add <song name>` : adds a song to the playlist
-    4. `!delete <song number>` : deletes a song from the playlist
-    5. `!join` : join the clan
-    6. `!list<page number (optional)> <author name>` : list all songs of the author (put `all` for all playlists)
+    All commands are preceded by a !
+  - !`help` to view help regarding the commands
+
+  - `!join` to join the userbase. This is required the first time you use the bot. 
+
+  - `!set` <playlist name> to set current playlist to <playlist name>. You will be prompted to add <playlist name> if it doesn't exist.
+
+  - `!add <song name>` to add a song to the set playlist.
+
+  - `!list` to list your playlist.
+
+  - `!list<number>` to list playlists on page number <number>.
+
+  - `!list all` to list ALL the playlists in the userbase, haha, just don't use this :slight_smile:
+
+  - `!rename <new_name>` to rename the set playlist to <new_name>
+
+  - `!describe <description>` to add a describe the set playlist to the specified description.
+
     '''
+
 
 
 @client.event
@@ -132,9 +146,6 @@ async def on_message(message):
                     await output_channel.send("You have no playlists set")
                 elif(spotify_client.check_valid_url(query) == 1):
                     spotify_client.add_url_to_playlist(query, playlist_id)
-                    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-                    print("HAHAHAAHAHHAA LINKKKKK")
-                    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 else:
                     
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
