@@ -1,4 +1,5 @@
 from time import time, sleep
+import requests
 
 CLIENT_ID = "468cc00d10c643708ce19aa7d7203b8d"
 CLIENT_SECRET = "79f9cadb0c3941a6b3ed08617c1e69ec"
@@ -17,9 +18,8 @@ f = open("authtoken.txt", "w")
 f.write(str(data))
 f.write("\n====================================\n")
 f.close()
-while True:
-    import requests
 
+def get_access_token():
     try:
         response = requests.post(REQUEST, data=data)
         f = open("authtoken.txt", "a")
@@ -30,13 +30,15 @@ while True:
         access_token = None
 
     print(access_token)
-    
+    return access_token
 
-    f = open('.env', 'w')
-    to_write = '''SPOTIFY_USER_ID="y4ob0twgc8h44hcxkor64bvc3"''' + \
-        '\n'+'''SPOTIFY_AUTHORIZATION_TOKEN="'''+access_token+'"'+'\n'
-    # print(to_write)
-    f.write(to_write)
-    f.close()
-    sleep(3599 - time() % 3599)
+    # f = open('.env', 'w')
+    # to_write = '''SPOTIFY_USER_ID="y4ob0twgc8h44hcxkor64bvc3"''' + \
+    #     '\n'+'''SPOTIFY_AUTHORIZATION_TOKEN="'''+access_token+'"'+'\n'
+    # # print(to_write)
+    # f.write(to_write)
+    # f.close()
+    # sleep(3599 - time() % 3599)
     # break
+if __name__ == "__main__":
+    pass
