@@ -1,6 +1,8 @@
 import os
 import json
-
+from track import Track
+from requests.api import get
+from authtoken import get_access_token
 from dotenv.main import dotenv_values
 from spotifyclient import SpotifyClient
 from playlist import Playlist
@@ -10,7 +12,7 @@ from createplaylist import main
 from commands_parser import *
 from dotenv import load_dotenv
 load_dotenv()
-spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
+spotify_client = SpotifyClient('dummy token',
                                os.getenv("SPOTIFY_USER_ID"))
 # bot connect
 client = discord.Client()
@@ -49,7 +51,6 @@ def get_command_help():
     '''
 
 
-
 @client.event
 # new event
 async def on_ready():
@@ -59,13 +60,25 @@ async def on_ready():
     output_channel = client.get_channel(out_channel)
     # code to send message is
     await output_channel.send("Bring yourself back online, Dolores.")
+    # print('====================================================')
+    # print(spotify_client._authorization_token)
+    # print('====================================================')
     # print("bot started")
 
 
 @client.event
 async def on_message(message):
-    spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
-                                   os.getenv("SPOTIFY_USER_ID"))
+    try:
+        url = f"https://api.spotify.com/v1/search?q=hello&type=track&limit=1&offset=0"
+        response = spotify_client._place_get_api_request(url)
+        response_json = response.json()
+        tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
+                  track in response_json["tracks"]["items"]]
+    except:
+        spotify_client._authorization_token = get_access_token()
+    # print('====================================================')
+    # print(spotify_client._authorization_token)
+    # print('====================================================')
     output_channel = message.channel
     print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
@@ -145,7 +158,7 @@ async def on_message(message):
                 elif(spotify_client.check_valid_url(query) == 1):
                     spotify_client.add_url_to_playlist(query, playlist_id)
                 else:
-                    
+
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                     main(query, addingurl)
                     myEmbed = discord.Embed(
