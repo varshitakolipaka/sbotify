@@ -332,6 +332,10 @@ async def on_message(message):
             playlist_name, playlist_id = sbotify_db.return_set_playlists(
                 member_id)
             huh = sbotify_db.set_view_settings(command, member_id, playlist_id)
+            if huh == 1:
+                myEmbed = discord.Embed(
+                    title=f"Playlist status changed to {command}")
+                await output_channel.send(embed=myEmbed)
             if huh == 0:
                 myEmbed = discord.Embed(
                     title="Error", description=f"Not your playlist, smh. You cannot make someone else's playlists {command}.")
