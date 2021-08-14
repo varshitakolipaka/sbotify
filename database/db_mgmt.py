@@ -1,5 +1,7 @@
 import sqlite3
 
+# DB organisation: playlist_name, plaulist_id, created_by, view, edit
+
 
 class DB:
     def __init__(self, path):
@@ -16,7 +18,7 @@ class DB:
         CREATE TABLE Members(member_id TEXT, set_playlist TEXT)
         ''')
         self.cur.execute('''
-        CREATE TABLE Playlists(playlist_name TEXT, playlist_id TEXT, created_by TEXT, )
+        CREATE TABLE Playlists(playlist_name TEXT, playlist_id TEXT, created_by TEXT,view TEXT, edit TEXT) )
         ''')
         self.db.commit()
 
@@ -46,12 +48,13 @@ class DB:
             return (res2[0][0], res[0][1])
         else:
             return (0, 0)
+
     def return_playlist_settings(self, playlist_id):
         col, res = self.run_query(f'''
         SELECT * FROM Playlists WHERE playlist_id='{playlist_id}'
         ''')
         try:
-            return (res[3],res[4])
+            return (res[0][2], res[0][3], res[0][4])
         except:
             None
 
@@ -107,20 +110,28 @@ class DB:
         self.cur.execute(f"DELETE FROM {table_name}")
         self.db.commit()
 
-    def list_all_playlists(self, author_id):
+    def list_all_playlists(self, command_author_id, author_id):
         if author_id == 'all':
             col, res = self.run_query(f'''
-            SELECT * FROM Playlists
+            SELECT * FROM Playlists 
+            WHERE view='public'
+            ''')
+        elif command_author_id != author_id:
+            col, res = self.run_query(f'''
+            SELECT * FROM Playlists 
+            WHERE created_by='{author_id}' 
+            AND view='public'
             ''')
         else:
             col, res = self.run_query(f'''
-            SELECT * FROM Playlists WHERE created_by='{author_id}'
+            SELECT * FROM Playlists 
+            WHERE created_by='{author_id}'
             ''')
         if len(res) == 0:
             return 0
         return res
 
-    def set_edit_settings(self, command, member_id):
+    def set_edit_settings(self, command, member_id, playlist_id):
         if self.check_member(member_id) == 1:
             col, res = self.run_query(f'''
             SELECT * FROM Members WHERE member_id='{member_id}'
@@ -132,13 +143,13 @@ class DB:
             ''')
             if res[0][0] == member_id:
                 self.cur.execute(
-                    f'''UPDATE Playlists SET edit= '{command}' WHERE playlist_id='{playlist_id} AND created_by='{member_id}'
+                    f'''UPDATE Playlists SET edit='{command}' WHERE playlist_id='{playlist_id}'
                     ''')
                 return 1
             else:
                 return 0
 
-    def set_view_settings(self, command, member_id):
+    def set_view_settings(self, command, member_id, playlist_id):
         if self.check_member(member_id) == 1:
             col, res = self.run_query(f'''
             SELECT * FROM Members WHERE member_id='{member_id}'
@@ -150,7 +161,7 @@ class DB:
             ''')
             if res[0][0] == member_id:
                 self.cur.execute(
-                    f'''UPDATE Playlists SET view= '{command}' WHERE playlist_id='{playlist_id} AND created_by='{member_id}'
+                    f'''UPDATE Playlists SET view= '{command}' WHERE playlist_id='{playlist_id}'
                     ''')
                 return 1
             else:
@@ -161,6 +172,7 @@ class DB:
 
 
 sbotify_db = DB('./database/playlists.db')
+
 # update playlists and set al view to public
 # sbotify_db.cur.execute(f'''UPDATE Playlists SET edit = 'unlock' ''')
 # sbotify_db.cur.execute(f'''UPDATE Playlists SET view = 'public' ''')
