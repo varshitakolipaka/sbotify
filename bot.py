@@ -137,6 +137,9 @@ async def on_message(message):
                 if query.startswith('<@!') and query.endswith('>'):
                     query = query[3:]
                     query = query[:len(query) - 1]
+                elif query.startswith('<@') and query.endswith('>'):
+                    query = query[2:]
+                    query = query[:len(query) - 1]
                 ret_val = sbotify_db.list_all_playlists(
                     message.author.id, query)
             except:
