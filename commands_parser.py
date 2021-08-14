@@ -10,7 +10,7 @@ def swap(list, pos1, pos2):
 
 # list of all commands
 commands = ["add", "remove", "set", "join", "delete", "list", "help",
-            "rename", "describe", "private", "public", "lock", "unlock"]
+            "rename", "describe", "private", "public", "lock", "unlock", "show", "change_prefix"]
 
 
 def is_command(command):  # hell bello
@@ -99,6 +99,20 @@ def is_command_lock(command):
 
 def is_command_unlock(command):
     if(is_command(command) and command == "unlock"):
+        return 1
+    else:
+        return 0
+
+
+def is_command_show(command):
+    if(is_command(command) and command == "show"):
+        return 1
+    else:
+        return 0
+
+
+def is_command_change_prefix(command):
+    if(is_command(command) and command == "change_prefix"):
         return 1
     else:
         return 0

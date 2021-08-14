@@ -176,7 +176,7 @@ sbotify_db = DB('./database/playlists.db')
 # update playlists and set al view to public
 # sbotify_db.cur.execute(f'''UPDATE Playlists SET edit = 'unlock' ''')
 # sbotify_db.cur.execute(f'''UPDATE Playlists SET view = 'public' ''')
-sbotify_db.print_db('Playlists')
+# sbotify_db.print_db('Playlists')
 # sbotify_db.db.commit()
 # sbotify_db.add_column('Playlists','view')
 # sbotify_db.add_column('Playlists', 'edit')

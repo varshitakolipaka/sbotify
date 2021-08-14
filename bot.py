@@ -19,7 +19,7 @@ client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
 out_channel = 'default out channel'
 
-prefix = '!'
+prefix = ['!']
 
 # list of playlists
 playlists = []
@@ -30,23 +30,25 @@ motor_functions = [0]
 
 
 def get_command_help():
-    return '''
+    return f'''
     All commands are preceded by a !
-  - !`help` to view help regarding the commands
+  - `{prefix[0]}help` to view help regarding the commands
 
-  - `!join` to join the userbase. This is required the first time you use the bot. 
+  - `{prefix[0]}join` to join the userbase. This is required the first time you use the bot. 
 
-  - `!set` <playlist name> to set current playlist to <playlist name>. You will be prompted to add <playlist name> if it doesn't exist.
+  - `{prefix[0]}set` <playlist name> to set current playlist to <playlist name>. You will be prompted to add <playlist name> if it doesn't exist.
+  
+  - `{prefix[0]}show` to show current set playlist.
+  
+  - `{prefix[0]}add <song name>` to add a song to the set playlist.
 
-  - `!add <song name>` to add a song to the set playlist.
+  - `{prefix[0]}list` to list your playlist.
 
-  - `!list` to list your playlist.
+  - `{prefix[0]}list<number>` to list playlists on page number <number>.
 
-  - `!list<number>` to list playlists on page number <number>.
+  - `{prefix[0]}rename <new_name>` to rename the set playlist to <new_name>
 
-  - `!rename <new_name>` to rename the set playlist to <new_name>
-
-  - `!describe <description>` to add a describe the set playlist to the specified description.
+  - `{prefix[0]}describe <description>` to add a describe the set playlist to the specified description.
 
     '''
 
@@ -54,6 +56,10 @@ def get_command_help():
 @client.event
 # new event
 async def on_ready():
+    f = open("prefix.json", "r")
+    var = json.load(f)
+    prefix[0] = var["prefix"]
+    f.close()
     # sbotify_db.print_db('Playlists')
     # sbotify_db.print_db('Members')
     # output_channel object holds the info of that channel, whos id is provided
@@ -77,27 +83,42 @@ async def on_message(message):
     except:
         spotify_client._authorization_token = get_access_token()
     output_channel = message.channel
-    print(motor_functions)
+    # print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
+    if input_mssg.lower() == "show prefix" and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+        await output_channel.send(f"Prefix is : {prefix[0]}")
     if input_mssg.lower() == 'freeze all motor functions' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
         motor_functions[0] = 1
     if input_mssg.lower() == 'bring yourself back online' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
         motor_functions[0] = 0
-    if input_mssg[0] == '!' and motor_functions[0] == 0:
+    if input_mssg[0] == prefix[0] and motor_functions[0] == 0:
         mssg = input_mssg.split(" ", 1)
         command = mssg[0][1:len(mssg[0])]
         if (sbotify_db.check_member(message.author.id) == 0) and (command != 'join') and (command != 'help'):
             myEmbed = discord.Embed(
-                title="Error", description=f"Uh Oh, you are not yet part of the clan\n Use `{prefix}join` to be a part of Sbotify family!")
+                title="Error", description=f"Uh Oh, you are not yet part of the clan\n Use `{prefix[0]}join` to be a part of Sbotify family!")
             await output_channel.send(embed=myEmbed)
         elif command == 'print':
             print(message.content)
-
+        elif is_command_show(command):
+            playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                str(message.author.id))
+            author, view, edit = sbotify_db.return_playlist_settings(
+                playlist_id)
+            no_of_songs = spotify_client.get_total_songs(playlist_id)
+            addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
+            myEmbed = discord.Embed(
+                title="Current set playlist", description=f"[{playlist_name}]({addingurl})\n Created by: <@!{author}>\n Number of songs: {no_of_songs}")
+            await output_channel.send(embed=myEmbed)
         elif is_command_help(command):
             myEmbed = discord.Embed(
                 title="Help", description=get_command_help())
             await output_channel.send(embed=myEmbed)
-
+        elif is_command_change_prefix(command) and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+            prefix[0] = mssg[1]
+            f = open("prefix.json", "w")
+            f.write(json.dumps({"prefix": prefix[0]}))
+            f.close()
         elif is_command_list(command):
             page = 0
             if(command == "list"):
@@ -108,7 +129,7 @@ async def on_message(message):
                     # print(page)
                 except:
                     myEmbed = discord.Embed(
-                        title="Error", description=f"This is not a recognized command.\n Try `{prefix}help` to see all commands")
+                        title="Error", description=f"This is not a recognized command.\n Try `{prefix[0]}help` to see all commands")
                     await output_channel.send(embed=myEmbed)
                     return
             try:
@@ -123,8 +144,8 @@ async def on_message(message):
                     message.author.id, message.author.id)
             if ret_val == 0:
                 myEmbed = discord.Embed(
-                    title="No Playlists", description=f'''Uh Oh, there aren't any playlists created by this author\n Use `{prefix}set <name>` to create and set playlists\n
-                    Use `{prefix}help` to see all commands.''')
+                    title="No Playlists", description=f'''Uh Oh, there aren't any playlists created by this author\n Use `{prefix[0]}set <name>` to create and set playlists\n
+                    Use `{prefix[0]}help` to see all commands.''')
                 await output_channel.send(embed=myEmbed)
             else:
                 # discord embed to list all values of ret_val
@@ -132,7 +153,7 @@ async def on_message(message):
                 # print(playlist_len)
                 if(playlist_len <= (page-1)*10 or page <= 0):
                     myEmbed = discord.Embed(
-                        title="Page Doesn't Exist", description=f"There are only {int(playlist_len/10) + 1} Pages.\n Try `{prefix}help` to see all commands")
+                        title="Page Doesn't Exist", description=f"There are only {int(playlist_len/10) + 1} Pages.\n Try `{prefix[0]}help` to see all commands")
                     await output_channel.send(embed=myEmbed)
                     return
                 send_message = ''
@@ -142,7 +163,8 @@ async def on_message(message):
                         continue
                     if ret_val.index(i) >= page*10:
                         break
-                    send_message += f'''[**{ret_val.index(i)+1}. {i[0]}**](https://open.spotify.com/playlist/{i[1]})\nCreated by: <@!{i[2]}>\n\n'''
+                    # no_of_songs = spotify_client.get_total_songs(i[1])
+                    send_message += f'''[**{ret_val.index(i)+1}. {i[0]}**](https://open.spotify.com/playlist/{i[1]})\nCreated by: <@!{i[2]}>\n'''
                 myEmbed = discord.Embed(
                     title="Playlists", description=f"{send_message}Page: {page} of {int(playlist_len/10) + 1}")
                 await output_channel.send(embed=myEmbed)
@@ -186,7 +208,7 @@ async def on_message(message):
                             await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(
-                    title="Error", description=f"No argument specified.\n Try `{prefix}help` to see all commands")
+                    title="Error", description=f"No argument specified.\n Try `{prefix[0]}help` to see all commands")
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_delete(command):
@@ -225,14 +247,14 @@ async def on_message(message):
                             await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(
-                    title="Error", description=f"No or wrong argument specified.\n Try `{prefix}help` to see usage.")
+                    title="Error", description=f"No or wrong argument specified.\n Try `{prefix[0]}help` to see usage.")
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_join(command):
             new_member = str(message.author.id)
             if sbotify_db.check_member(new_member) == 1:
                 myEmbed = discord.Embed(
-                    title="You are already a part of the clan", description=f"Try `{prefix}help` to see all commands")
+                    title="You are already a part of the clan", description=f"Try `{prefix[0]}help` to see all commands")
                 await output_channel.send(embed=myEmbed)
             else:
                 sbotify_db.insert_members(new_member)
@@ -322,7 +344,7 @@ async def on_message(message):
 
             if(len(mssg) == 1):
                 myEmbed = discord.Embed(
-                    title="Error", description=f"No argument specified.\n Try `{prefix}help` to see all commands")
+                    title="Error", description=f"No argument specified.\n Try `{prefix[0]}help` to see all commands")
                 await output_channel.send(embed=myEmbed)
 
             if sbotify_db.check_member(str(message.author.id)) == 1:
@@ -341,7 +363,7 @@ async def on_message(message):
 
             if(flag1 == 0):
                 myEmbed = discord.Embed(
-                    title="Error", description=f"Uh Oh, you are not yet part of the clan\n Use `{prefix}join` to be a part of Sbotify family!")
+                    title="Error", description=f"Uh Oh, you are not yet part of the clan\n Use `{prefix[0]}join` to be a part of Sbotify family!")
                 await output_channel.send(embed=myEmbed)
 
             elif(flag2 == 0):
@@ -357,7 +379,7 @@ async def on_message(message):
 
         else:
             myEmbed = discord.Embed(
-                title="Error", description=f"This is not a recognized command.\n Try `{prefix}help` to see all commands")
+                title="Error", description=f"This is not a recognized command.\n Try `{prefix[0]}help` to see all commands")
             await output_channel.send(embed=myEmbed)
         sbotify_db.db.commit()
 
