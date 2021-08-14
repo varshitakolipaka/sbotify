@@ -160,7 +160,7 @@ async def on_message(message):
                 else:
 
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
-                    main(query, addingurl)
+                    main(query, addingurl, spotify_client._authorization_token)
                     myEmbed = discord.Embed(
                         title="Elon Approves :triumph:", description=f"Song added to [{playlist_name}]({addingurl})")
                     await output_channel.send(embed=myEmbed)
@@ -180,7 +180,7 @@ async def on_message(message):
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                     spotify_client.delete_song_by_position(number, playlist_id)
                     myEmbed = discord.Embed(
-                        title="Elon Disapproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
+                        title="Elon Aapproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
                     await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(

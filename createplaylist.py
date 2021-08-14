@@ -4,10 +4,10 @@ from typing import Hashable
 
 from spotifyclient import SpotifyClient
 
-def main(query,playlist_name):
+def main(query,playlist_name, SPOTIFY_AUTHORIZATION_TOKEN):
     print("HELLLLLOOOOOOOOOOOOOO")
     #import environment variables from .env
-    spotify_client = SpotifyClient(os.getenv("SPOTIFY_AUTHORIZATION_TOKEN"),
+    spotify_client = SpotifyClient(SPOTIFY_AUTHORIZATION_TOKEN,
                                    os.getenv("SPOTIFY_USER_ID"))
     # replace spaces with %20
     query = query.replace(" ","%20")
