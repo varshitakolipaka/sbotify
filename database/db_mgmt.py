@@ -10,13 +10,19 @@ class DB:
     def run_query(self, query):
         self.cur.execute(query)
         return [i[0] for i in self.cur.description], self.cur.fetchall()
+
     def make_tables(self):
         self.cur.execute('''
         CREATE TABLE Members(member_id TEXT, set_playlist TEXT)
         ''')
         self.cur.execute('''
-        CREATE TABLE Playlists(playlist_name TEXT, playlist_id TEXT, created_by TEXT)
+        CREATE TABLE Playlists(playlist_name TEXT, playlist_id TEXT, created_by TEXT, )
         ''')
+        self.db.commit()
+
+    def add_column(self, table_name, column_name):
+        self.cur.execute(
+            f'''ALTER TABLE {table_name} ADD COLUMN '{column_name}' TEXT''')
         self.db.commit()
 
     def insert_members(self, member_id):
@@ -26,7 +32,7 @@ class DB:
 
     def insert_playlist(self, playlist_name, playlist_id, member_id):
         self.cur.execute(f'''
-        INSERT INTO Playlists VALUES ('{playlist_name}','{playlist_id}','{member_id}')
+        INSERT INTO Playlists VALUES ('{playlist_name}','{playlist_id}','{member_id}','public','unlock')
         ''')
 
     def return_set_playlists(self, member_id):
@@ -40,6 +46,14 @@ class DB:
             return (res2[0][0], res[0][1])
         else:
             return (0, 0)
+    def return_playlist_settings(self, playlist_id):
+        col, res = self.run_query(f'''
+        SELECT * FROM Playlists WHERE playlist_id='{playlist_id}'
+        ''')
+        try:
+            return (res[3],res[4])
+        except:
+            None
 
     def check_member(self, member_id):
         col, res = self.run_query(f'''
@@ -106,11 +120,54 @@ class DB:
             return 0
         return res
 
+    def set_edit_settings(self, command, member_id):
+        if self.check_member(member_id) == 1:
+            col, res = self.run_query(f'''
+            SELECT * FROM Members WHERE member_id='{member_id}'
+            ''')
+            playlist_id = res[0][1]
+            print(res)
+            col, res = self.run_query(f'''
+                SELECT created_by FROM Playlists WHERE playlist_id='{playlist_id}'
+            ''')
+            if res[0][0] == member_id:
+                self.cur.execute(
+                    f'''UPDATE Playlists SET edit= '{command}' WHERE playlist_id='{playlist_id} AND created_by='{member_id}'
+                    ''')
+                return 1
+            else:
+                return 0
+
+    def set_view_settings(self, command, member_id):
+        if self.check_member(member_id) == 1:
+            col, res = self.run_query(f'''
+            SELECT * FROM Members WHERE member_id='{member_id}'
+            ''')
+            playlist_id = res[0][1]
+            print(res)
+            col, res = self.run_query(f'''
+                SELECT created_by FROM Playlists WHERE playlist_id='{playlist_id}'
+            ''')
+            if res[0][0] == member_id:
+                self.cur.execute(
+                    f'''UPDATE Playlists SET view= '{command}' WHERE playlist_id='{playlist_id} AND created_by='{member_id}'
+                    ''')
+                return 1
+            else:
+                return 0
+
     def close_db(self):
         self.db.close()
 
 
 sbotify_db = DB('./database/playlists.db')
+# update playlists and set al view to public
+# sbotify_db.cur.execute(f'''UPDATE Playlists SET edit = 'unlock' ''')
+# sbotify_db.cur.execute(f'''UPDATE Playlists SET view = 'public' ''')
+sbotify_db.print_db('Playlists')
+# sbotify_db.db.commit()
+# sbotify_db.add_column('Playlists','view')
+# sbotify_db.add_column('Playlists', 'edit')
 
 # sbotify_db.make_tables()
 # sbotify_db.clean_db()

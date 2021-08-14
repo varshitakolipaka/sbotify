@@ -9,7 +9,8 @@ def swap(list, pos1, pos2):
 
 
 # list of all commands
-commands = ["add", "remove", "set", "join", "delete", "list", "help", "rename", "describe"]
+commands = ["add", "remove", "set", "join", "delete", "list", "help",
+            "rename", "describe", "private", "public", "lock", "unlock"]
 
 
 def is_command(command):  # hell bello
@@ -67,8 +68,37 @@ def is_command_rename(command):
     else:
         return 0
 
+
 def is_command_describe(command):
     if(is_command(command) and command == "describe"):
+        return 1
+    else:
+        return 0
+
+
+def is_command_public(command):
+    if(is_command(command) and command == "public"):
+        return 1
+    else:
+        return 0
+
+
+def is_command_private(command):
+    if(is_command(command) and command == "private"):
+        return 1
+    else:
+        return 0
+
+
+def is_command_lock(command):
+    if(is_command(command) and command == "lock"):
+        return 1
+    else:
+        return 0
+
+
+def is_command_unlock(command):
+    if(is_command(command) and command == "unlock"):
         return 1
     else:
         return 0

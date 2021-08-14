@@ -160,10 +160,19 @@ async def on_message(message):
                 else:
 
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
-                    main(query, addingurl, spotify_client._authorization_token)
-                    myEmbed = discord.Embed(
-                        title="Elon Approves :triumph:", description=f"Song added to [{playlist_name}]({addingurl})")
-                    await output_channel.send(embed=myEmbed)
+                    added_song = main(query, addingurl,
+                                      spotify_client._authorization_token)
+                    if(added_song == None):
+                        myEmbed = discord.Embed(
+                            title="Error", description=f"Couldn't find the song. Try to modify the search query.")
+                        await output_channel.send(embed=myEmbed)
+                    else:
+                        song_url = f'https://open.spotify.com/track/{added_song.id}'
+                        myEmbed = discord.Embed(
+                            title="Song added", description=f'''Name: [**{added_song.name}**]({song_url})\n
+                            By: **{added_song.artist}**\n
+                            Added to: [**{playlist_name}**]({addingurl})''')
+                        await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(
                     title="Error", description=f"No argument specified.\n Try {prefix} help to see all commands")
@@ -180,7 +189,7 @@ async def on_message(message):
                     addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
                     spotify_client.delete_song_by_position(number, playlist_id)
                     myEmbed = discord.Embed(
-                        title="Elon Aapproves :triumph:", description=f"Song deleted from [{playlist_name}]({addingurl})")
+                        title="Song removed", description=f"Song deleted from [{playlist_name}]({addingurl})")
                     await output_channel.send(embed=myEmbed)
             except:
                 myEmbed = discord.Embed(
@@ -189,8 +198,6 @@ async def on_message(message):
 
         elif is_command_join(command):
             new_member = str(message.author.id)
-            # DELETE NEXT LINE AFTER TESTING
-            sbotify_db.insert_members('755673930215194664')
             if sbotify_db.check_member(new_member) == 1:
                 myEmbed = discord.Embed(
                     title="You are already a part of the clan", description=f"Try {prefix} help to see all commands")
@@ -233,6 +240,21 @@ async def on_message(message):
             else:
                 myEmbed = discord.Embed(
                     title="Error", description=f"Something went wrong, Please try again, see `!help` for usage.")
+                await output_channel.send(embed=myEmbed)
+        elif is_command_lock(command) or is_command_unlock(command):
+            member_id = str(message.author.id)
+            huh = sbotify_db.set_edit_settings(command, member_id)
+            if huh == 0:
+                myEmbed = discord.Embed(
+                    title="Error", description=f"Not your playlist smh.")
+                await output_channel.send(embed=myEmbed)
+
+        elif is_command_private(command) or is_command_public(command):
+            member_id = str(message.author.id)
+            huh = sbotify_db.set_edit_settings(command, member_id)
+            if huh == 0:
+                myEmbed = discord.Embed(
+                    title="Error", description=f"Not your playlist smh.")
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_set(command):
