@@ -101,7 +101,7 @@ async def on_message(message):
     input_mssg = message.content  # message.content is the string of that message
     if input_mssg.lower() == "show prefix" and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
         myEmbed = discord.Embed(
-                title="`{prefix[0]}`", description=f'''Prefix is `{prefix[0]}`
+                title=f'''`{prefix[0]}`''', description=f'''
                 
                 `{prefix[0]}help` to learn more about commands.''')
         await output_channel.send(embed=myEmbed)
