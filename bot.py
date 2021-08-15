@@ -31,40 +31,40 @@ motor_functions = [0]
 
 def get_command_help():
     return f'''
-    All commands are preceded by a `!`. In the following commands, if set prefix is different, replace `!` by that prefix.
-  - `!help` to view help regarding the commands
+    All commands are preceded by a `{prefix[0]}`. In the following commands, if set prefix is different, replace `{prefix[0]}` by that prefix.
+  - `{prefix[0]}help` to view help regarding the commands
   
-  - `!join` to join the userbase. This is required the first time you use the bot. 
+  - `{prefix[0]}join` to join the userbase. This is required the first time you use the bot. 
   
-  - `!set <playlist name>` to set current playlist to `<playlist name>`. You will be prompted to add <playlist name> if it doesn't exist.
+  - `{prefix[0]}set <playlist name>` to set current playlist to `<playlist name>`. You will be prompted to add <playlist name> if it doesn't exist.
   
-  - `!show` displays the set playlist.
+  - `{prefix[0]}show` displays the set playlist.
   
-  - `!add <song name>` to add a song to the set playlist. 
+  - `{prefix[0]}add <song name>` to add a song to the set playlist. 
 
-  - `!delete <song_position>` to delete song at specified numeric position. 
+  - `{prefix[0]}delete <song_position>` to delete song at specified numeric position. 
 
-  - `!delete last` to delete the last added song.
+  - `{prefix[0]}delete last` to delete the last added song.
   
-  - `!list` to list your playlists
+  - `{prefix[0]}list` to list your playlists
   
-  - `!list @<username>` to list <username>'s playlists. 
+  - `{prefix[0]}list @<username>` to list <username>'s playlists. 
   
-  - `!list<number>` to list playlists on page number <number>.
+  - `{prefix[0]}list<number>` to list playlists on page number <number>.
   
-  - `!list all` to list ALL the playlists in the userbase, haha, just don't use this :slight_smile:
+  - `{prefix[0]}list all` to list ALL the playlists in the userbase, haha, just don't use this :slight_smile:
   
-  - `!rename <new_name>` to rename the set playlist to <new_name>
+  - `{prefix[0]}rename <new_name>` to rename the set playlist to <new_name>
   
-  - `!describe` to add a description to the set playlist to the specified description.
+  - `{prefix[0]}describe` to add a description to the set playlist to the specified description.
   
-  - `!lock` to lock the set playlist, so nobody except you can modify the playlist
+  - `{prefix[0]}lock` to lock the set playlist, so nobody except you can modify the playlist
   
-  - `!unlock` to unlock the set playlist, so anyone who knows the playlist name can modify it.
+  - `{prefix[0]}unlock` to unlock the set playlist, so anyone who knows the playlist name can modify it.
   
-  - `!private` to hide the set playlist, only you can view it in the `!list @<your_username>` command
+  - `{prefix[0]}private` to hide the set playlist, only you can view it in the `{prefix[0]}list @<your_username>` command
   
-  - `!public` to make the set playlist visible to everyone on `!list @<your_username>`
+  - `{prefix[0]}public` to make the set playlist visible to everyone on `{prefix[0]}list @<your_username>`
 
     '''
 
