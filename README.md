@@ -26,7 +26,11 @@ You will also require a refresh token incase you want to change the auth token. 
   
   - `!show` displays the set playlist.
   
-  - `!add <song name>` to add a song to the set playlist.  
+  - `!add <song name>` to add a song to the set playlist. 
+
+  - `!delete <song_position>` to delete song at specified numeric position. 
+
+  - `!delete last` to delete the last added song.
   
   - `!list` to list your playlists
   
@@ -47,4 +51,3 @@ You will also require a refresh token incase you want to change the auth token. 
   - `!private` to hide the set playlist, only you can view it in the `!list @<your_username>` command
   
   - `!public` to make the set playlist visible to everyone on `!list @<your_username>`
-
