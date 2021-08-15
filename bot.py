@@ -31,7 +31,7 @@ motor_functions = [0]
 
 def get_command_help():
     return f'''
-    All commands are preceded by a !
+    All commands are preceded by a {prefix[0]}
   - `{prefix[0]}help` to view help regarding the commands
 
   - `{prefix[0]}join` to join the userbase. This is required the first time you use the bot. 
@@ -261,7 +261,7 @@ async def on_message(message):
                 await output_channel.send(embed=myEmbed)
             else:
                 sbotify_db.insert_members(new_member)
-                description_message = "Try `!help` to see all commands"
+                description_message = "Try `{prefix[0]}help` to see all commands"
                 myEmbed = discord.Embed(
                     title="Welcome to the Sbotify family!", description=description_message)
                 await output_channel.send(embed=myEmbed)
@@ -314,7 +314,7 @@ async def on_message(message):
                     spotify_client.describe_playlist(playlist_id, mssg[1])
                 else:
                     myEmbed = discord.Embed(
-                        title="Error", description=f"Something went wrong, Please try again, see `!help` for usage.")
+                        title="Error", description=f"Something went wrong, Please try again, see `{prefix[0]}help` for usage.")
                     await output_channel.send(embed=myEmbed)
         elif is_command_lock(command) or is_command_unlock(command):
             member_id = str(message.author.id)
