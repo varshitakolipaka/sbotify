@@ -52,8 +52,6 @@ def get_command_help():
   
   - `{prefix[0]}list<number>` to list playlists on page number <number>.
   
-  - `{prefix[0]}list all` to list ALL the playlists in the userbase, haha, just don't use this :slight_smile:
-  
   - `{prefix[0]}rename <new_name>` to rename the set playlist to <new_name>
   
   - `{prefix[0]}describe` to add a description to the set playlist to the specified description.
@@ -102,7 +100,9 @@ async def on_message(message):
     # print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
     if input_mssg.lower() == "show prefix" and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
-        await output_channel.send(f"Prefix is : {prefix[0]}")
+        myEmbed = discord.Embed(
+                title="Error", description=f"Prefix is `{prefix[0]}`. Use `{prefix[0]}help` to learn more about commands.")
+        await output_channel.send(embed=myEmbed)
     if input_mssg.lower() == 'freeze all motor functions' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
         motor_functions[0] = 1
     if input_mssg.lower() == 'bring yourself back online' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
