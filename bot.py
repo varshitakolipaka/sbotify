@@ -216,7 +216,13 @@ async def on_message(message):
                             myEmbed = discord.Embed(
                                 title="Error", description=f"Couldn't find the song. Try to modify the search query.")
                             await output_channel.send(embed=myEmbed)
+                        
                         else:
+                            if(spotify_client.is_song_repeat(playlist_id, added_song.name, added_song.artist) == 1):
+                                myEmbed = discord.Embed(
+                                title="Error", description=f"Seems like this song has been added before, if that's the case, use `{prefix[0]}delete last`.")
+                            await output_channel.send(embed=myEmbed)
+
                             song_url = f'https://open.spotify.com/track/{added_song.id}'
                             total_songs = spotify_client.get_total_songs(
                                 playlist_id)

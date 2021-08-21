@@ -113,6 +113,20 @@ class SpotifyClient:
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = self._place_get_api_request(url)
         response_json = response.json()
+        print(response_json)
+        try:
+            return int(response_json["total"])
+        except:
+            return None
+
+    def check_song_repeat(self, playlist_id, song_name, song_artist):
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        response = _place_get_api_request(url)
+        response_json = response.json()
+        num = response_json["total"]
+        for i in range(num):
+            song_name = print(response_json["items"][i]["track"]["name"])
+            artist_name = print(response_json["items"][i]["track"]["artists"]["name"])
         try:
             return int(response_json["total"])
         except:
