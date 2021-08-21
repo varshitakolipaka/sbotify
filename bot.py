@@ -219,6 +219,7 @@ async def on_message(message):
                         
                         else:
                             if(spotify_client.is_song_repeat(playlist_id, added_song.name, added_song.artist) == 1):
+                                print("HELLLLLOoooo")
                                 myEmbed = discord.Embed(
                                 title="Error", description=f"Seems like this song has been added before, if that's the case, use `{prefix[0]}delete last`.")
                             await output_channel.send(embed=myEmbed)
