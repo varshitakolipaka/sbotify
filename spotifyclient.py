@@ -118,6 +118,7 @@ class SpotifyClient:
             return int(response_json["total"])
         except:
             return None
+
     def is_song_repeat(self, playlist_id, name, artist):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = self._place_get_api_request(url)
@@ -126,10 +127,11 @@ class SpotifyClient:
         try:
             for i in range(num):
                 songs_name = print(response_json["items"][i]["track"]["name"])
-                artists_name = print(response_json["items"][i]["track"]["artists"]["name"])
+                artists_name = print(
+                    response_json["items"][i]["track"]["artists"]["name"])
                 if(songs_name == name and artist == artists_name):
-                    return 1  
-                else: 
+                    return 1
+                else:
                     return 0
         except:
             return None
@@ -213,3 +215,40 @@ class SpotifyClient:
             }
         )
         return response
+
+    def help_helper(prefix):
+        return f'''
+    All commands are preceded by a `{prefix}`. In the following commands, if set prefix is different, replace `{prefix}` by that prefix.
+  - `{prefix}help` to view help regarding the commands
+  
+  - `{prefix}join` to join the userbase. This is required the first time you use the bot. 
+  
+  - `{prefix}set <playlist name>` to set current playlist to `<playlist name>`. You will be prompted to add <playlist name> if it doesn't exist.
+  
+  - `{prefix}show` displays the set playlist.
+  
+  - `{prefix}add <song name>` to add a song to the set playlist. 
+
+  - `{prefix}delete <song_position>` to delete song at specified numeric position. 
+
+  - `{prefix}delete last` to delete the last added song.
+  
+  - `{prefix}list` to list your playlists
+  
+  - `{prefix}list @<username>` to list <username>'s playlists. 
+  
+  - `{prefix}list<number>` to list playlists on page number <number>.
+  
+  - `{prefix}rename <new_name>` to rename the set playlist to <new_name>
+  
+  - `{prefix}describe` to add a description to the set playlist to the specified description.
+  
+  - `{prefix}lock` to lock the set playlist, so nobody except you can modify the playlist
+  
+  - `{prefix}unlock` to unlock the set playlist, so anyone who knows the playlist name can modify it.
+  
+  - `{prefix}private` to hide the set playlist, only you can view it in the `{prefix}list @<your_username>` command
+  
+  - `{prefix}public` to make the set playlist visible to everyone on `{prefix}list @<your_username>`
+
+    '''

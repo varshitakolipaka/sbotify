@@ -18,7 +18,7 @@ spotify_client = SpotifyClient('dummy token',
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
 out_channel = 'default out channel'
-prefix = "&"
+prefix = ["&"]
 
 
 # list of playlists
@@ -30,41 +30,8 @@ motor_functions = [0]
 
 
 def get_command_help():
-    return f'''
-    All commands are preceded by a `{prefix[0]}`. In the following commands, if set prefix is different, replace `{prefix[0]}` by that prefix.
-  - `{prefix[0]}help` to view help regarding the commands
-  
-  - `{prefix[0]}join` to join the userbase. This is required the first time you use the bot. 
-  
-  - `{prefix[0]}set <playlist name>` to set current playlist to `<playlist name>`. You will be prompted to add <playlist name> if it doesn't exist.
-  
-  - `{prefix[0]}show` displays the set playlist.
-  
-  - `{prefix[0]}add <song name>` to add a song to the set playlist. 
-
-  - `{prefix[0]}delete <song_position>` to delete song at specified numeric position. 
-
-  - `{prefix[0]}delete last` to delete the last added song.
-  
-  - `{prefix[0]}list` to list your playlists
-  
-  - `{prefix[0]}list @<username>` to list <username>'s playlists. 
-  
-  - `{prefix[0]}list<number>` to list playlists on page number <number>.
-  
-  - `{prefix[0]}rename <new_name>` to rename the set playlist to <new_name>
-  
-  - `{prefix[0]}describe` to add a description to the set playlist to the specified description.
-  
-  - `{prefix[0]}lock` to lock the set playlist, so nobody except you can modify the playlist
-  
-  - `{prefix[0]}unlock` to unlock the set playlist, so anyone who knows the playlist name can modify it.
-  
-  - `{prefix[0]}private` to hide the set playlist, only you can view it in the `{prefix[0]}list @<your_username>` command
-  
-  - `{prefix[0]}public` to make the set playlist visible to everyone on `{prefix[0]}list @<your_username>`
-
-    '''
+    help_command = spotify_client.help_helper(prefix[0])
+    return help_command
 
 
 @client.event
@@ -74,16 +41,9 @@ async def on_ready():
     var = json.load(f)
     prefix[0] = var["prefix"]
     f.close()
-    # sbotify_db.print_db('Playlists')
-    # sbotify_db.print_db('Members')
-    # output_channel object holds the info of that channel, whos id is provided
+
     output_channel = client.get_channel(out_channel)
-    # code to send message is
     await output_channel.send("Bring yourself back online, Dolores.")
-    # print('====================================================')
-    # print(spotify_client._authorization_token)
-    # print('====================================================')
-    # print("bot started")
 
 
 @client.event
@@ -97,7 +57,6 @@ async def on_message(message):
     except:
         spotify_client._authorization_token = get_access_token()
     output_channel = message.channel
-    # print(motor_functions)
     input_mssg = message.content  # message.content is the string of that message
     if input_mssg.lower() == "show prefix" and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
         myEmbed = discord.Embed(
