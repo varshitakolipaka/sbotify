@@ -18,8 +18,8 @@ spotify_client = SpotifyClient('dummy token',
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
 out_channel = 'default out channel'
+prefix = "&"
 
-prefix = ['!']
 
 # list of playlists
 playlists = []
@@ -101,7 +101,7 @@ async def on_message(message):
     input_mssg = message.content  # message.content is the string of that message
     if input_mssg.lower() == "show prefix" and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
         myEmbed = discord.Embed(
-                title=f'''`{prefix[0]}`''', description=f'''
+            title=f'''`{prefix[0]}`''', description=f'''
                 
                 `{prefix[0]}help` to learn more about commands.''')
         await output_channel.send(embed=myEmbed)
@@ -216,12 +216,12 @@ async def on_message(message):
                             myEmbed = discord.Embed(
                                 title="Error", description=f"Couldn't find the song. Try to modify the search query.")
                             await output_channel.send(embed=myEmbed)
-                        
+
                         else:
                             if(spotify_client.is_song_repeat(playlist_id, added_song.name, added_song.artist) == 1):
                                 print("HELLLLLOoooo")
                                 myEmbed = discord.Embed(
-                                title="Error", description=f"Seems like this song has been added before, if that's the case, use `{prefix[0]}delete last`.")
+                                    title="Error", description=f"Seems like this song has been added before, if that's the case, use `{prefix[0]}delete last`.")
                             await output_channel.send(embed=myEmbed)
 
                             song_url = f'https://open.spotify.com/track/{added_song.id}'
