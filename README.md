@@ -15,7 +15,8 @@ Alternatively, you can customise the bot for your usage, or run locally by chang
 
 You will also require a refresh token incase you want to change the auth token. You can get it [here](https://getyourspotifyrefreshtoken.herokuapp.com/)
 
-  
+
+
 ### Usage 
   All commands are preceded by a `&`. In the following commands, if set prefix is different, replace `&` by that prefix.
   - `&help` to view help regarding the commands
