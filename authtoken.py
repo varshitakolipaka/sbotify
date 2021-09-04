@@ -1,12 +1,16 @@
 from time import time, sleep
 import requests
-
-CLIENT_ID = "client_id"
-CLIENT_SECRET = "client_secret"
+import os
+from dotenv import load_dotenv
+load_dotenv()
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 SCOPE = '''user-read-private user-read-email user-read-playback-position playlist-read-private user-library-read user-library-modify user-top-read playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-follow-read user-follow-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played'''
-REFRESH_TOKEN = "refresh_token"
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 REQUEST = "https://accounts.spotify.com/api/token"
-
+print(CLIENT_ID)
+print(CLIENT_SECRET)
+print(REFRESH_TOKEN)
 data = {
     "client_id": CLIENT_ID,
     "client_secret": CLIENT_SECRET,
@@ -14,10 +18,7 @@ data = {
     "refresh_token": REFRESH_TOKEN,
     'scopes': SCOPE
 }
-f = open("authtoken.txt", "w")
-f.write(str(data))
-f.write("\n====================================\n")
-f.close()
+
 
 def get_access_token():
     try:
@@ -31,14 +32,5 @@ def get_access_token():
 
     print(access_token)
     return access_token
-
-    # f = open('.env', 'w')
-    # to_write = '''SPOTIFY_USER_ID="y4ob0twgc8h44hcxkor64bvc3"''' + \
-    #     '\n'+'''SPOTIFY_AUTHORIZATION_TOKEN="'''+access_token+'"'+'\n'
-    # # print(to_write)
-    # f.write(to_write)
-    # f.close()
-    # sleep(3599 - time() % 3599)
-    # break
 if __name__ == "__main__":
     pass

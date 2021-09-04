@@ -17,7 +17,7 @@ spotify_client = SpotifyClient('dummy token',
 # bot connect
 client = discord.Client()
 # this variable stores id of an output channel, you can have many variables corresponding to different channels
-out_channel = 'default out channel'
+out_channel = int(os.getenv("DEFAULT_CHANNEL"))
 prefix = ["&"]
 
 
@@ -37,11 +37,6 @@ def get_command_help():
 @client.event
 # new event
 async def on_ready():
-    f = open("prefix.json", "r")
-    var = json.load(f)
-    prefix[0] = var["prefix"]
-    f.close()
-
     output_channel = client.get_channel(out_channel)
     await output_channel.send("Bring yourself back online, Dolores.")
 
@@ -58,17 +53,17 @@ async def on_message(message):
         spotify_client._authorization_token = get_access_token()
     output_channel = message.channel
     input_mssg = message.content  # message.content is the string of that message
-    if input_mssg.lower() == "show prefix" and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+    if input_mssg.lower() == "show prefix" and (message.author.id == os.getenv('ADMIN1') or message.author.id == os.getenv('ADMIN2')):
         myEmbed = discord.Embed(
             title=f'''`{prefix[0]}`''', description=f'''
                 
                 `{prefix[0]}help` to learn more about commands.''')
         await output_channel.send(embed=myEmbed)
-    if input_mssg.lower() == 'freeze all motor functions' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+    if input_mssg.lower() == 'freeze all motor functions' and (message.author.id == os.getenv('ADMIN1') or message.author.id == os.getenv('ADMIN2')):
         motor_functions[0] = 1
-    if input_mssg.lower() == 'bring yourself back online' and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+    if input_mssg.lower() == 'bring yourself back online' and (message.author.id == os.getenv('ADMIN1') or message.author.id == os.getenv('ADMIN2')):
         motor_functions[0] = 0
-    if input_mssg[0] == prefix[0] and motor_functions[0] == 0:
+    if input_mssg.startswith(prefix[0]) and motor_functions[0] == 0:
         mssg = input_mssg.split(" ", 1)
         command = mssg[0][1:len(mssg[0])]
         if (sbotify_db.check_member(message.author.id) == 0) and (command != 'join') and (command != 'help'):
@@ -91,7 +86,7 @@ async def on_message(message):
             myEmbed = discord.Embed(
                 title="Help", description=get_command_help())
             await output_channel.send(embed=myEmbed)
-        elif is_command_change_prefix(command) and (message.author.id == 'badmin1' or message.author.id == 'badmin2'):
+        elif is_command_change_prefix(command) and (message.author.id == os.getenv('ADMIN1') or message.author.id == os.getenv('ADMIN2')):
             prefix[0] = mssg[1]
             f = open("prefix.json", "w")
             f.write(json.dumps({"prefix": prefix[0]}))
@@ -177,11 +172,11 @@ async def on_message(message):
                             await output_channel.send(embed=myEmbed)
 
                         else:
-                            if(spotify_client.is_song_repeat(playlist_id, added_song.name, added_song.artist) == 1):
-                                print("HELLLLLOoooo")
+                            if(spotify_client.is_song_repeat(playlist_id, added_song.id) == 1):
+                                # print("HELLLLLOoooo")
                                 myEmbed = discord.Embed(
                                     title="Error", description=f"Seems like this song has been added before, if that's the case, use `{prefix[0]}delete last`.")
-                            await output_channel.send(embed=myEmbed)
+                                await output_channel.send(embed=myEmbed)
 
                             song_url = f'https://open.spotify.com/track/{added_song.id}'
                             total_songs = spotify_client.get_total_songs(
@@ -375,4 +370,4 @@ async def on_message(message):
         sbotify_db.db.commit()
 
 # Run the client on this server
-client.run('ODU0ODEwMTc0NzUzNzM0Njg2.YMpWAw.en-SE9Y-87G2u1soPxKwV4TSNQ0')
+client.run(os.getenv('BOT_TOKEN'))

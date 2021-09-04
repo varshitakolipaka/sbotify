@@ -119,20 +119,19 @@ class SpotifyClient:
         except:
             return None
 
-    def is_song_repeat(self, playlist_id, name, artist):
+    def is_song_repeat(self, playlist_id, id):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = self._place_get_api_request(url)
         response_json = response.json()
         num = int(response_json["total"])
         try:
-            for i in range(num):
-                songs_name = print(response_json["items"][i]["track"]["name"])
-                artists_name = print(
-                    response_json["items"][i]["track"]["artists"]["name"])
-                if(songs_name == name and artist == artists_name):
+            for i in response_json["items"]:
+                song_id = i["track"]["id"]
+                if(song_id == id):
                     return 1
                 else:
-                    return 0
+                    continue
+            return None
         except:
             return None
 
@@ -216,7 +215,7 @@ class SpotifyClient:
         )
         return response
 
-    def help_helper(prefix):
+    def help_helper(self,prefix):
         return f'''
     All commands are preceded by a `{prefix}`. In the following commands, if set prefix is different, replace `{prefix}` by that prefix.
   - `{prefix}help` to view help regarding the commands
