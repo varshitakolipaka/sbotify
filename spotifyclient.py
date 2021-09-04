@@ -44,7 +44,7 @@ class SpotifyClient:
         list = []
         list.append(url)
         data = json.dumps(list)
-        print(data)
+        # print(data)
         req_link = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = self._place_post_api_request(req_link, data)
         response_json = response.json()
@@ -78,10 +78,10 @@ class SpotifyClient:
         """
 
         track_uris = [track.create_spotify_uri() for track in tracks]
-        print(track_uris)
+        # print(track_uris)
         data = json.dumps(track_uris)
 
-        print(data)
+        # print(data)
         url = f"https://api.spotify.com/v1/playlists/{playlist}/tracks"
         response = self._place_post_api_request(url, data)
         response_json = response.json()
@@ -89,14 +89,14 @@ class SpotifyClient:
 
     def delete_song_by_position(self, number, playlist_id):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-        print(url)
+        # print(url)
         response = self._place_get_api_request(url)
         response_json = response.json()
         # tracks = [Track(track["name"], track["id"], track["artists"][0]["name"]) for
         #           track in response_json["tracks"]]
         track = str(response_json["items"][number-1]["track"]["id"])
         id = "spotify:track:"+track
-        print(id)
+        # print(id)
         data = json.dumps({
             "tracks": [
                 {
@@ -104,7 +104,7 @@ class SpotifyClient:
                 }
             ]
         })
-        print(data)
+        # print(data)
         response = self._place_delete_api_request(url, data)
         response_json = response.json()
         return response_json
@@ -113,7 +113,7 @@ class SpotifyClient:
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = self._place_get_api_request(url)
         response_json = response.json()
-        print(response_json)
+        # print(response_json)
         try:
             return int(response_json["total"])
         except:
@@ -123,21 +123,22 @@ class SpotifyClient:
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = self._place_get_api_request(url)
         response_json = response.json()
-        num = int(response_json["total"])
-        try:
-            for i in response_json["items"]:
-                song_id = i["track"]["id"]
-                if(song_id == id):
-                    return 1
-                else:
-                    continue
-            return None
-        except:
-            return None
+        # try:
+        for i in response_json["items"]:
+            song_id = i["track"]["id"]
+            if(song_id == id):
+                # print(f"song_id={song_id}")
+                # print(f"id={id}")
+                return 1
+            else:
+                continue
+        return None
+        # except:
+        #     return None
 
     def rename_playlist(self, playlist_id, new_name):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
-        print(url)
+        # print(url)
         data = json.dumps({
             "name": new_name,
         })
@@ -147,7 +148,7 @@ class SpotifyClient:
 
     def describe_playlist(self, playlist_id, new_name):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
-        print(url)
+        # print(url)
         data = json.dumps({
             "description": new_name,
         })
@@ -163,10 +164,10 @@ class SpotifyClient:
         :return response: API response
         """
         track_uris = [track.create_spotify_uri() for track in tracks]
-        print(track_uris)
+        # print(track_uris)
 
         data = json.dumps(track_uris)
-        print(data)
+        # print(data)
         url = f"https://api.spotify.com/v1/playlists/{playlist}/tracks"
         response = self._place_post_api_request(url, data)
         response_json = response.json()
@@ -215,7 +216,7 @@ class SpotifyClient:
         )
         return response
 
-    def help_helper(self,prefix):
+    def help_helper(self, prefix):
         return f'''
     All commands are preceded by a `{prefix}`. In the following commands, if set prefix is different, replace `{prefix}` by that prefix.
   - `{prefix}help` to view help regarding the commands

@@ -5,7 +5,7 @@ from typing import Hashable
 from spotifyclient import SpotifyClient
 
 
-def main(query, playlist_name, SPOTIFY_AUTHORIZATION_TOKEN):
+def main(query, playlist_name, SPOTIFY_AUTHORIZATION_TOKEN, condition):
     # import environment variables from .env
     spotify_client = SpotifyClient(SPOTIFY_AUTHORIZATION_TOKEN,
                                    os.getenv("SPOTIFY_USER_ID"))
@@ -23,7 +23,8 @@ def main(query, playlist_name, SPOTIFY_AUTHORIZATION_TOKEN):
     # print(playlist_name)
 
     # populate playlist with recommended tracks
-    spotify_client.populate_playlist(playlist_name, added_song)
+    if(condition):
+        spotify_client.populate_playlist(playlist_name, added_song)
     # print(
     #     f"\nSong added to the playlist.")
     if len(added_song) == 0:

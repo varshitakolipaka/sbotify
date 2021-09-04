@@ -8,9 +8,9 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 SCOPE = '''user-read-private user-read-email user-read-playback-position playlist-read-private user-library-read user-library-modify user-top-read playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-follow-read user-follow-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played'''
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 REQUEST = "https://accounts.spotify.com/api/token"
-print(CLIENT_ID)
-print(CLIENT_SECRET)
-print(REFRESH_TOKEN)
+# print(CLIENT_ID)
+# print(CLIENT_SECRET)
+# print(REFRESH_TOKEN)
 data = {
     "client_id": CLIENT_ID,
     "client_secret": CLIENT_SECRET,
@@ -23,9 +23,9 @@ data = {
 def get_access_token():
     try:
         response = requests.post(REQUEST, data=data)
-        f = open("authtoken.txt", "a")
-        f.write(response.text)
-        f.close()
+        # f = open("authtoken.txt", "a")
+        # f.write(response.text)
+        # f.close()
         access_token = response.json()["access_token"]
     except:
         access_token = None

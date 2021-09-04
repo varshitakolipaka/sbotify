@@ -145,53 +145,55 @@ async def on_message(message):
                 await output_channel.send(embed=myEmbed)
 
         elif is_command_add(command):
-            try:
-                query = mssg[1]
-                playlist_name, playlist_id = sbotify_db.return_set_playlists(
-                    str(message.author.id))
-                author, view, edit = sbotify_db.return_playlist_settings(
-                    playlist_id)
-                if edit == "lock" and str(message.author.id) != str(author):
-                    myEmbed = discord.Embed(
-                        title="Error", description=f'''This playlist is locked. Cannot modify a locked playlist.
-                            ''')
-                    await output_channel.send(embed=myEmbed)
-                else:
-                    if(playlist_id == '0'):
-                        await output_channel.send("You have no playlists set")
-                    elif(spotify_client.check_valid_url(query) == 1):
-                        spotify_client.add_url_to_playlist(query, playlist_id)
-                    else:
-
-                        addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
-                        added_song = main(query, addingurl,
-                                          spotify_client._authorization_token)
-                        if(added_song == None):
-                            myEmbed = discord.Embed(
-                                title="Error", description=f"Couldn't find the song. Try to modify the search query.")
-                            await output_channel.send(embed=myEmbed)
-
-                        else:
-                            if(spotify_client.is_song_repeat(playlist_id, added_song.id) == 1):
-                                # print("HELLLLLOoooo")
-                                myEmbed = discord.Embed(
-                                    title="Error", description=f"Seems like this song has been added before, if that's the case, use `{prefix[0]}delete last`.")
-                                await output_channel.send(embed=myEmbed)
-
-                            song_url = f'https://open.spotify.com/track/{added_song.id}'
-                            total_songs = spotify_client.get_total_songs(
-                                playlist_id)
-                            myEmbed = discord.Embed(
-                                title="Song added", description=f'''Name: [{added_song.name}]({song_url})
-                                By: {added_song.artist}
-                                Added to: [{playlist_name}]({addingurl})
-                                Position: {total_songs}
-                                ''')
-                            await output_channel.send(embed=myEmbed)
-            except:
+            # try:
+            query = mssg[1]
+            playlist_name, playlist_id = sbotify_db.return_set_playlists(
+                str(message.author.id))
+            author, view, edit = sbotify_db.return_playlist_settings(
+                playlist_id)
+            if edit == "lock" and str(message.author.id) != str(author):
                 myEmbed = discord.Embed(
-                    title="Error", description=f"No argument specified.\n Try `{prefix[0]}help` to see all commands")
+                    title="Error", description=f'''This playlist is locked. Cannot modify a locked playlist.
+                        ''')
                 await output_channel.send(embed=myEmbed)
+            else:
+                if(playlist_id == '0'):
+                    await output_channel.send("You have no playlists set")
+                elif(spotify_client.check_valid_url(query) == 1):
+                    spotify_client.add_url_to_playlist(query, playlist_id)
+                else:
+
+                    addingurl = f"https://open.spotify.com/playlist/{playlist_id}"
+                    added_song = main(query, addingurl,
+                                      spotify_client._authorization_token, 0)
+                    if(added_song == None):
+                        myEmbed = discord.Embed(
+                            title="Error", description=f"Couldn't find the song. Try to modify the search query.")
+                        await output_channel.send(embed=myEmbed)
+
+                    else:
+                        if(spotify_client.is_song_repeat(playlist_id, added_song.id) == 1):
+                            # print("HELLLLLOoooo")
+                            myEmbed = discord.Embed(
+                                title="Error", description=f"Seems like this song has been added before")
+                            await output_channel.send(embed=myEmbed)
+                            return
+                        main(query, addingurl,
+                             spotify_client._authorization_token, 1)
+                        song_url = f'https://open.spotify.com/track/{added_song.id}'
+                        total_songs = spotify_client.get_total_songs(
+                            playlist_id)
+                        myEmbed = discord.Embed(
+                            title="Song added", description=f'''Name: [{added_song.name}]({song_url})
+                            By: {added_song.artist}
+                            Added to: [{playlist_name}]({addingurl})
+                            Position: {total_songs}
+                            ''')
+                        await output_channel.send(embed=myEmbed)
+            # except:
+            #     myEmbed = discord.Embed(
+            #         title="Error", description=f"No argument specified.\n Try `{prefix[0]}help` to see all commands")
+            #     await output_channel.send(embed=myEmbed)
 
         elif is_command_delete(command):
             try:
@@ -354,7 +356,7 @@ async def on_message(message):
 
             elif(flag2 == 0):
                 new_playlist = spotify_client.create_playlist(mssg[1])
-                print(new_playlist)
+                # print(new_playlist)
                 sbotify_db.insert_playlist(
                     new_playlist.name, new_playlist.id, str(message.author.id))
                 sbotify_db.update_set_playlist(
